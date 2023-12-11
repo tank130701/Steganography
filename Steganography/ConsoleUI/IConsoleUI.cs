@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Steganography.ConsoleUI
 {
-    internal interface IConsoleUI
+    internal interface IConsoleUi
     {
         void Run();
     }

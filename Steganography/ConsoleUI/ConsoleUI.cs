@@ -1,6 +1,6 @@
 namespace Steganography.ConsoleUI
 {
-    public class ConsoleUI : IConsoleUI
+    public class ConsoleUi : IConsoleUi
     {
         public void Run()
         {
