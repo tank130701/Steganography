@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Steganography.Repository
 {
-    internal interface IRepository
+    public interface IRepository
     {
         void SaveImage();
         void LoadImage();
