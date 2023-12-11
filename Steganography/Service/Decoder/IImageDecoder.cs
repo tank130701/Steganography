@@ -1,6 +1,6 @@
 namespace Steganography.Service.Decoder
 {
-    internal interface IImageDecoder
+    public interface IImageDecoder
     {
         void DecodeText(string imagePath);
     }
