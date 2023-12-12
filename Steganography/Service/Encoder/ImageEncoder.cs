@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Steganography.Repository;
 using Steganography.Service.Utils;
+using Steganography.Service.Utils.Enums;
 
 namespace Steganography.Service.Encoder;
 
@@ -26,8 +27,8 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
     {
         byte[] message_bytes = Encoding.ASCII.GetBytes(message);
 
-        // Do not trust the IDE0300 message
-        int? EOF_index = SequenceLocator.LocateSequence(byte_array, new byte[] {0xFF, 0xD9}) ?? throw new Exception("Broken JPEG: Couldn't find EOF marker");
+        // Do NOT trust the IDE0300 message
+        int? EOF_index = SequenceLocator.LocateSequence(byte_array, new byte[] {(byte)JpegMarker.Padding, (byte)JpegMarker.EndOfImage}) ?? throw new Exception("Broken JPEG: Couldn't find EOF marker");
 
         Array.Resize(ref byte_array, byte_array.Length+message_bytes.Length);
 
