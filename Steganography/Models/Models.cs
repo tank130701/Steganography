@@ -1,7 +1,7 @@
 ﻿namespace Steganography.Models;
 
-public class ConsoleMenu(string title, List<object> options)
+public class ConsoleMenu(string title, List<string> options)
 {
     public string Title { get; } = title;
-    public List<object> Options { get; } = options;
+    public List<string> Options { get; } = options;
 }

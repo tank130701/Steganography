@@ -8,25 +8,25 @@ namespace Steganography.ConsoleUI
 {
     internal static class MainMenuButtons
     {
-        public const string TextMainMenuEncodeMessage = "Закодировать сообщение";
-        public const string TextMainMenuDecodeMessage = "Декодировать сообщение";
-        public const string TextMainMenuExit = "Выход";
+        public const string MainMenuEncodeMessage = "Закодировать сообщение";
+        public const string MainMenuDecodeMessage = "Декодировать сообщение";
+        public const string MainMenuExit = "Выход";
     }
 
     internal static class EncodeMenuButtons
     {
-        public const string TextEncodeMenuSelectImage = "Выбрать изображение";
-        public const string TextEncodeMenuSelectAlogrithm = "Выбрать алгоритм";
-        public const string TextEncodeMenuWriteMessage = "Написать сообщение";
-        public const string TextEncodeMenuEncodeMessage = "Закодировать сообщение";
+        public const string EncodeMenuSelectImage = "Выбрать изображение";
+        public const string EncodeMenuSelectAlgorithm = "Выбрать алгоритм";
+        public const string EncodeMenuWriteMessage = "Написать сообщение";
+        public const string EncodeMenuEncodeMessage = "Закодировать сообщение";
 
     }
 
     internal static class DecodeMenuButtons
     {
-        public const string TextDecodeMenuSelectImage = "Выбрать изображение";
-        public const string TextDecodeMenuSelectAlogrithm = "Выбрать алгоритм";
-        public const string TextDecodeMenuDecodeMessage = "Декодировать сообщение";
+        public const string DecodeMenuSelectImage = "Выбрать изображение";
+        public const string DecodeMenuSelectAlgorithm = "Выбрать алгоритм";
+        public const string DecodeMenuDecodeMessage = "Декодировать сообщение";
 
     }
 

@@ -66,14 +66,19 @@ namespace Steganography.ConsoleUI
         
         public void Run()
         {
-            Action action1 = () => Console.WriteLine("Executing action 1");
-            Action action2 = () => Console.WriteLine("Executing action 2");
-
-            ConsoleMenu subMenu = new ConsoleMenu("Submenu", new List<object> { "Option 1", "Option 2", action1 });
+            ConsoleMenu subMenu = new ConsoleMenu("Encode Menu", new List<string>
+            {
+                EncodeMenuButtons.EncodeMenuSelectImage,
+                EncodeMenuButtons.EncodeMenuSelectAlgorithm,
+                EncodeMenuButtons.EncodeMenuWriteMessage,
+                EncodeMenuButtons.EncodeMenuEncodeMessage
+            });
             ConsoleMenu mainMenu = new ConsoleMenu("Main Menu",
-                new List<object>
+                new List<string>
                 {
-                    "Option A", "Option B", subMenu, action2
+                    MainMenuButtons.MainMenuEncodeMessage, 
+                    MainMenuButtons.MainMenuDecodeMessage,
+                    MainMenuButtons.MainMenuExit
                 });
             DisplayMenu(mainMenu);
         }
