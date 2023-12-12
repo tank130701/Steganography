@@ -2,6 +2,6 @@
 {
     public interface IImageEncoder
     {
-        void EncodeText(string imagePath, string outputImagePath, string text);
+        void EncodeText(string imagePath, string outputImagePath, string text, string algorithm);
     }
 }
