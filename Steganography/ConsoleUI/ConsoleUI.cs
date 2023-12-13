@@ -9,64 +9,6 @@ namespace Steganography.ConsoleUI
         private readonly IImageEncoder _encoder = encoder;
         private readonly IImageDecoder _decoder = decoder;
         
-        void DisplayOptions(ConsoleMenu menu)
-        {
-            Console.WriteLine(menu.Title);
-
-            for (int i = 0; i < menu.Options.Count; i++)
-            {
-                string currentOption = menu.Options[i];
-                string prefix;
-
-                if(i == menu.SelectedIndex)
-                {
-                    prefix = "*";
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.White;
-                } else
-                {
-                    prefix = " ";
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.BackgroundColor = ConsoleColor.Black;
-                }
-
-                Console.WriteLine($"{prefix} -- {currentOption} --");
-            }
-
-            Console.ResetColor();
-        }
-
-        string DisplayMenu(ConsoleMenu menu)
-        {
-            ConsoleKey keyPressed;
-            do
-            {
-                Console.Clear();
-                DisplayOptions(menu);
-
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                keyPressed = keyInfo.Key;
-
-                if(keyPressed == ConsoleKey.DownArrow)
-                {
-                    menu.SelectedIndex++;
-                    if(menu.SelectedIndex >= menu.Options.Count)
-                    {
-                        menu.SelectedIndex = 0;
-                    }
-                }else if(keyPressed == ConsoleKey.UpArrow)
-                {
-                    menu.SelectedIndex--;
-                    if(menu.SelectedIndex < 0)
-                    {
-                        menu.SelectedIndex = menu.Options.Count-1;
-                    }
-                }
-            } while(keyPressed!=ConsoleKey.Enter);
-
-            return menu.Options[menu.SelectedIndex];
-        }
-        
         public void Run()
         {
             ConsoleMenu mainMenu = new ConsoleMenu("Main Menu",
@@ -102,13 +44,13 @@ namespace Steganography.ConsoleUI
                 switch (state)
                 {
                     case State.MainMenu:
-                        button = DisplayMenu(mainMenu);
+                        button = mainMenu.DisplayMenu();
                         break;
                     case State.EncodeMenu:
-                        button = DisplayMenu(encodeMenu);
+                        button = encodeMenu.DisplayMenu();
                         break;
                     case State.DecodeMenu:
-                        button = DisplayMenu(decodeMenu);
+                        button = decodeMenu.DisplayMenu();
                         break;
                 }
                 HandleInput(button, ref state);
