@@ -9,84 +9,108 @@ namespace Steganography.ConsoleUI
         private readonly IImageEncoder _encoder = encoder;
         private readonly IImageDecoder _decoder = decoder;
         
-        private readonly Stack<ConsoleMenu> _menuStack = new();
-
-        private void DisplayMenu(ConsoleMenu menu)
-        {
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine(menu.Title);
-                Console.WriteLine(new string('=', menu.Title.Length));
-
-                for (int i = 0; i < menu.Options.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}. {menu.Options[i]}");
-                }
-
-                Console.WriteLine("0. Go back");
-
-                char key = GetKeyPress();
-                if (key == '0')
-                {
-                    if (_menuStack.Count > 0)
-                    {
-                        menu = _menuStack.Pop();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Cannot go back. This is the root menu.");
-                        Console.ReadKey();
-                        return;
-                    }
-                }
-                else if (char.IsDigit(key))
-                {
-                    int choice = int.Parse(key.ToString());
-
-                    if (choice > 0 && choice <= menu.Options.Count)
-                    {
-                        object selectedOption = menu.Options[choice - 1];
-
-                        if (selectedOption is ConsoleMenu submenu)
-                        {
-                            _menuStack.Push(menu);
-                            menu = submenu;
-                        }
-                        else if (selectedOption is Action action)
-                        {
-                            action.Invoke();
-                            Console.WriteLine("Press any key to continue...");
-                            Console.ReadKey();
-                        }
-                    }
-                }
-            }
-        }
-        
         public void Run()
         {
-            ConsoleMenu subMenu = new ConsoleMenu("Encode Menu", new List<string>
-            {
-                EncodeMenuButtons.EncodeMenuSelectImage,
-                EncodeMenuButtons.EncodeMenuSelectAlgorithm,
-                EncodeMenuButtons.EncodeMenuWriteMessage,
-                EncodeMenuButtons.EncodeMenuEncodeMessage
-            });
             ConsoleMenu mainMenu = new ConsoleMenu("Main Menu",
                 new List<string>
                 {
-                    MainMenuButtons.MainMenuEncodeMessage, 
-                    MainMenuButtons.MainMenuDecodeMessage,
-                    MainMenuButtons.MainMenuExit
+                    MainMenuButtons.EncodeMessage, 
+                    MainMenuButtons.DecodeMessage,
+                    MainMenuButtons.Exit
                 });
-            DisplayMenu(mainMenu);
+            
+            ConsoleMenu encodeMenu = new ConsoleMenu("Encode Menu", new List<string>
+                {
+                    EncodeMenuButtons.SelectImage,
+                    EncodeMenuButtons.SelectAlgorithm,
+                    EncodeMenuButtons.WriteMessage,
+                    EncodeMenuButtons.EncodeMessage,
+                    EncodeMenuButtons.BackToMainMenu
+                });
+            
+            ConsoleMenu decodeMenu = new ConsoleMenu("Encode Menu", new List<string>
+                {
+                    DecodeMenuButtons.SelectImage,
+                    DecodeMenuButtons.SelectAlgorithm,
+                    DecodeMenuButtons.DecodeMessage,
+                    DecodeMenuButtons.BackToMainMenu
+                });
+            
+            
+            State state = State.MainMenu;
+            string button = "";
+            while (state != State.Exit)
+            {
+                switch (state)
+                {
+                    case State.MainMenu:
+                        button = mainMenu.DisplayMenu();
+                        break;
+                    case State.EncodeMenu:
+                        button = encodeMenu.DisplayMenu();
+                        break;
+                    case State.DecodeMenu:
+                        button = decodeMenu.DisplayMenu();
+                        break;
+                }
+                HandleInput(button, ref state);
+            }
         }
         
-        private char GetKeyPress()
+        void HandleInput(string button, ref State currentState)
         {
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            return keyInfo.KeyChar;
+            switch (currentState)
+            {
+                case State.MainMenu:
+                    switch (button)
+                    {
+                        case MainMenuButtons.EncodeMessage:
+                            currentState = State.EncodeMenu;
+                            break;
+                        case MainMenuButtons.DecodeMessage:
+                            currentState = State.DecodeMenu;
+                            break;
+                        case MainMenuButtons.Exit:
+                            currentState = State.Exit;
+                            break;
+                    }
+                    break;
+                case State.EncodeMenu:
+                    switch (button)
+                    {
+                        case EncodeMenuButtons.SelectImage:
+                            Console.WriteLine("Вы выбрали опцию SelectImage в EncodeMenu");
+                            break;
+                        case EncodeMenuButtons.SelectAlgorithm:
+                            Console.WriteLine("Вы выбрали опцию SelectAlgorithm в подменю EncodeMenu");
+                            break;
+                        case EncodeMenuButtons.WriteMessage:
+                            break;
+                        case EncodeMenuButtons.EncodeMessage:
+                            break;
+                        case EncodeMenuButtons.BackToMainMenu:
+                            currentState = State.MainMenu;
+                            break;
+                    }
+                    break;
+                case State.DecodeMenu:
+                    switch (button)
+                    {
+                        case DecodeMenuButtons.SelectImage: 
+                            Console.WriteLine("Вы выбрали опцию SelectImage в DecodeMenu");
+                            break;
+                        case DecodeMenuButtons.DecodeMessage:
+                            Console.WriteLine("Вы выбрали опцию DecodeMessage в DecodeMenu");
+                            break;
+                        case DecodeMenuButtons.SelectAlgorithm:
+                            Console.WriteLine("Вы выбрали опцию SelectAlgorithm в DecodeMenu");
+                            break;
+                        case DecodeMenuButtons.BackToMainMenu:
+                            currentState = State.MainMenu;
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }
