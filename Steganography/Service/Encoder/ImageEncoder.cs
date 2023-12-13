@@ -10,4 +10,5 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
     {
         throw new NotImplementedException();
     }
+
 }
