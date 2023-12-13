@@ -1,6 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Steganography",
+    "\\Steganography\\ConsoleUI",
+    "\\Steganography\\Models",
+    "\\Steganography\\Repository"
   ],
+  "SelectedNode": "\\Steganography\\ConsoleUI\\ConsoleUI.cs",
   "PreviewInSolutionExplorer": false
 }
