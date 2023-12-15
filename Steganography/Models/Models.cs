@@ -1,9 +1,10 @@
 ﻿namespace Steganography.Models;
 
-public enum State
+public enum MenuStates
 {
     MainMenu,
     EncodeMenu,
     DecodeMenu,
+    AlgorithmsMenu,
     Exit
 }
