@@ -10,5 +10,6 @@ namespace Steganography.Repository
     {
         void SaveImage();
         void LoadImage();
+        List<string> GetImageFilesInDirectory(string directoryPath);
     }
 }
