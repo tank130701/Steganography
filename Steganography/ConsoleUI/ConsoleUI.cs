@@ -8,8 +8,14 @@ namespace Steganography.ConsoleUI
     {
         private readonly IImageEncoder _encoder = encoder;
         private readonly IImageDecoder _decoder = decoder;
-        private string _selectedAlgorithm = "The encoding algorithm is not selected. Choose an algorithm.";
-        private string _selectedFilePath = "The file is not selected";
+        private string _messageToEncode = "The message is empty. Write a message.";
+        private string _selectedAlgorithm = "The encoding algorithm is not selected. Select an algorithm.";
+        private string _selectedFilePath = "The file is not selected. Select a file.";
+        public delegate void ChangeAlgorithm(string newText);
+        public delegate void ChangeMessage(string newText);
+        public event ChangeAlgorithm? AlgorithmChanged;
+        public event ChangeMessage? MessageChanged;
+        
         public void Run()
         {
             Info mainMenuInfo = null;
@@ -19,9 +25,13 @@ namespace Steganography.ConsoleUI
                     MainMenuButtons.EncodeMessage, 
                     MainMenuButtons.DecodeMessage,
                     MainMenuButtons.Exit
-                }, ref mainMenuInfo);
+                }, mainMenuInfo);
 
-            var encodeInfo = new Info(ref _selectedAlgorithm, ref _selectedFilePath);
+            var encodeInfo = new Info(
+                _selectedAlgorithm,
+                _selectedFilePath,
+                _messageToEncode
+                );
             ConsoleMenu encodeMenu = new ConsoleMenu( $"Select Option",
                 new List<string>
                 {
@@ -30,9 +40,13 @@ namespace Steganography.ConsoleUI
                     EncodeMenuButtons.WriteMessage,
                     EncodeMenuButtons.EncodeMessage,
                     EncodeMenuButtons.BackToMainMenu
-                }, ref encodeInfo);
+                }, encodeInfo);
 
-            var decodeInfo = new Info(ref _selectedAlgorithm, ref _selectedFilePath);
+            var decodeInfo = new Info(
+                _selectedAlgorithm,
+                _selectedFilePath,
+                _messageToEncode
+                );
             ConsoleMenu decodeMenu = new ConsoleMenu("Select Option",
                 new List<string>
                 {
@@ -40,7 +54,7 @@ namespace Steganography.ConsoleUI
                     DecodeMenuButtons.SelectAlgorithm,
                     DecodeMenuButtons.DecodeMessage,
                     DecodeMenuButtons.BackToMainMenu
-                }, ref decodeInfo);
+                }, decodeInfo);
             
             Info algorithmsMenuInfo = null;
             ConsoleMenu algorithmsMenu = new ConsoleMenu("Select Algorithm",
@@ -53,8 +67,11 @@ namespace Steganography.ConsoleUI
                     EncodeAlgorithmsButtons.Dct,
                     EncodeAlgorithmsButtons.F5,
                     EncodeAlgorithmsButtons.BackToMenu
-                },ref algorithmsMenuInfo);
+                },algorithmsMenuInfo);
             
+            AlgorithmChanged += encodeInfo.IsAlgorithmChanged;
+            AlgorithmChanged += decodeInfo.IsAlgorithmChanged;
+            MessageChanged += encodeInfo.IsMessageChanged;
             
             MenuStates menuStates = MenuStates.MainMenu;
             string button = "";
@@ -107,6 +124,13 @@ namespace Steganography.ConsoleUI
                             currentMenuStates = MenuStates.AlgorithmsMenu;
                             break;
                         case EncodeMenuButtons.WriteMessage:
+                            Console.Write("\nEnter a message: ");
+                            var newMessage = Console.ReadLine();
+                            if (newMessage != null)
+                            {
+                                _messageToEncode = newMessage;
+                                MessageChanged?.Invoke(_messageToEncode);
+                            } 
                             break;
                         case EncodeMenuButtons.EncodeMessage:
                             break;
@@ -137,26 +161,32 @@ namespace Steganography.ConsoleUI
                     {
                         case EncodeAlgorithmsButtons.Lsb:
                             _selectedAlgorithm = "LSB";
+                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.AlphaChannel:
                             _selectedAlgorithm = "AlphaChannel";
+                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.Palette:
                             _selectedAlgorithm = "Palette";
+                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.Metadata:
                             _selectedAlgorithm = "Metadata";
+                             AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.Dct:
                             _selectedAlgorithm = "DCT";
+                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.F5:
                             _selectedAlgorithm = "F5";
+                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.BackToMenu:

@@ -1,6 +1,6 @@
 ﻿namespace Steganography.ConsoleUI;
 
-public class ConsoleMenu(string title, List<string> options, ref Info info)
+public class ConsoleMenu(string title, List<string> options, Info info)
 {
     string Title { get; } = title;
     int SelectedIndex { get; set; } = 0;

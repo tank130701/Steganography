@@ -1,13 +1,27 @@
 ﻿namespace Steganography.ConsoleUI;
 
-public class Info(ref string selectedAlgorithm, ref string selectedFilePath)
+public class Info(string selectedAlgorithm, string selectedFilePath, string messageToEncode)
 {
-    private string _selectedAlgorithm { get; set; } = selectedAlgorithm;
-    private string _selectedFilePath { get; set; } = selectedFilePath;
+    private string SelectedAlgorithm { get; set; } = selectedAlgorithm;
+    private string SelectedFilePath { get; set; } = selectedFilePath;
+    private string MessageToEncode { get; set; } = messageToEncode;
 
     public void DisplayInfo()
     {
-        Console.WriteLine($"Selected Algorithm: {_selectedAlgorithm}");
-        Console.WriteLine($"Selected FilePath: {_selectedFilePath}");
+        Console.WriteLine($"Message to Encode: {MessageToEncode}");
+        Console.WriteLine($"Selected Algorithm: {SelectedAlgorithm}");
+        Console.WriteLine($"Selected FilePath: {SelectedFilePath}");
     }
+    
+    public void IsAlgorithmChanged(string newText)
+    {
+        SelectedAlgorithm = newText;
+    }
+    
+    public void IsMessageChanged(string newText)
+    {
+        MessageToEncode = newText;
+    }
+    
+    
 }
