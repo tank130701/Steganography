@@ -1,10 +1,12 @@
 ﻿namespace Steganography.ConsoleUI;
 
-public class ConsoleMenu(string title, List<string> options)
+public class ConsoleMenu(string title, List<string> options, Info info)
 {
     string Title { get; } = title;
     int SelectedIndex { get; set; } = 0;
     List<string> Options { get; } = options;
+
+    private Info Info { get; } = info;
     void DisplayOptions()
         {
             Console.WriteLine(Title);
@@ -38,6 +40,7 @@ public class ConsoleMenu(string title, List<string> options)
             do
             {
                 Console.Clear();
+                if (Info != null) Info.DisplayInfo();
                 DisplayOptions();
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);

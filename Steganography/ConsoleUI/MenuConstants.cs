@@ -32,5 +32,15 @@ namespace Steganography.ConsoleUI
 
     }
 
+    internal static class EncodeAlgorithmsButtons
+    {
+        public const string Lsb = "Least Significant Bit (LSB)";
+        public const string AlphaChannel = "Embedding into the alpha channel (Alhpa Channel)";
+        public const string Metadata = "Embedding in metadata (Metadata)";
+        public const string Palette = "Using color palettes (Palette)";
+        public const string Dct = "Encoding in DCT coefficients (DCT)";
+        public const string F5 = "F5 Steganography (F5)";
+        public const string BackToMenu = "Вернуться в главное меню";
+    }
 
 }
