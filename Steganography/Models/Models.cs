@@ -6,5 +6,7 @@ public enum MenuStates
     EncodeMenu,
     DecodeMenu,
     AlgorithmsMenu,
+    SelectFileToEncodeMenu,
+    SelectFileToDecodeMenu,
     Exit
 }
