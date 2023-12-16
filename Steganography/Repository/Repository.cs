@@ -1,17 +1,29 @@
-﻿namespace Steganography.Repository;
+﻿using System.Drawing;
+
+namespace Steganography.Repository;
 
 public class Repository : IRepository
 {
-    public void SaveImage()
+    public Bitmap LoadImageToBitmap(string imagePath)
     {
         throw new NotImplementedException();
     }
 
-    public void LoadImage()
+    public string SaveImageFromBitmap(Bitmap image)
     {
         throw new NotImplementedException();
     }
-    
+
+    public byte[] LoadImageToBytes(string imagePath)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string SaveImageFromBytes(byte[] image)
+    {
+        throw new NotImplementedException();
+    }
+
     public List<string> GetImageFilesInDirectory(string directoryPath)
     {
         List<string> imageFileList = new List<string>();

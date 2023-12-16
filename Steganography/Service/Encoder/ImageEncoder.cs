@@ -1,4 +1,5 @@
 ﻿using Steganography.Repository;
+using Steganography.Service.Algorithms;
 
 namespace Steganography.Service.Encoder;
 
@@ -8,7 +9,12 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
     
     public void EncodeText(string imagePath, string outputImagePath, string text, string algorithm)
     {
-        throw new NotImplementedException();
+        switch (algorithm)
+        {
+        }
+        // var image = repository.LoadImage(imagePath);
     }
+    
+    public List<string> GetImageFilesInDirectory() => repository.GetImageFilesInDirectory("ImagesForEncoding");
 
 }

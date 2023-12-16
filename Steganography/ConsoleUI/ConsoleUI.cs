@@ -1,4 +1,5 @@
 using Steganography.Models;
+using Steganography.Service.Algorithms;
 using Steganography.Service.Decoder;
 using Steganography.Service.Encoder;
 
@@ -160,32 +161,32 @@ namespace Steganography.ConsoleUI
                     switch (button)
                     {
                         case EncodeAlgorithmsButtons.Lsb:
-                            _selectedAlgorithm = "LSB";
+                            _selectedAlgorithm = EncodeAlgorithms.Lsb;
                             AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.AlphaChannel:
-                            _selectedAlgorithm = "AlphaChannel";
+                            _selectedAlgorithm = EncodeAlgorithms.AlphaChannel;
                             AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.Palette:
-                            _selectedAlgorithm = "Palette";
+                            _selectedAlgorithm = EncodeAlgorithms.Palette;
                             AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.Metadata:
-                            _selectedAlgorithm = "Metadata";
+                            _selectedAlgorithm = EncodeAlgorithms.Metadata;
                              AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.Dct:
-                            _selectedAlgorithm = "DCT";
+                            _selectedAlgorithm = EncodeAlgorithms.Dct;
                             AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
                         case EncodeAlgorithmsButtons.F5:
-                            _selectedAlgorithm = "F5";
+                            _selectedAlgorithm = EncodeAlgorithms.F5;
                             AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
