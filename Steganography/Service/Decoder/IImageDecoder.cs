@@ -4,12 +4,9 @@ using System.Drawing.Imaging;
 
 namespace Steganography.Service
 {
-    internal interface IImageDecoder
-    {
-        void DecodeText(string imagePath);
-    }
+    
 
-    internal class ImageDecoder : IImageDecoder
+    internal class ImageDecoder
     {
         public void DecodeText(string imagePath)
         {

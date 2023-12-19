@@ -5,13 +5,7 @@ using System.Drawing.Imaging;
 
 namespace Steganography.Service.Encoder
 {
-    public interface IImageEncoder
-    {
-        void EncodeText(string imagePath, string outputImagePath, string message, string algorithm);
-        List<string> GetImageFilesInDirectory();
-    }
-
-    public class ImageEncoder : IImageEncoder
+    public class ImageEncoder
     {
         public void EncodeText(string imagePath, string outputImagePath, string message, string algorithm)
         {
@@ -54,7 +48,7 @@ namespace Steganography.Service.Encoder
         }
     }
 
-    public class AlphaChannelImageEncoder : IImageEncoder
+    public class AlphaChannelImageEncoder
     {
         public void EncodeText(string imagePath, string outputImagePath, string message)
         {
@@ -85,6 +79,29 @@ namespace Steganography.Service.Encoder
             bmp.Save(outputImagePath, ImageFormat.Png);
         }
     }
+
+    public class MetadataImageEncoder
+    {
+        public void EncodeText(string imagePath, string outputImagePath, string message)
+        {
+            using (Image image = Image.FromFile(imagePath))
+            {
+                // Идентификатор комментария EXIF
+                const int ExifCommentId = 0x9286;
+
+                // Создаем новый элемент свойства для хранения текста
+                PropertyItem propItem = (PropertyItem)FormatterServices.GetUninitializedObject(typeof(PropertyItem));
+                propItem.Id = ExifCommentId;
+                propItem.Type = 2; // ASCII
+                propItem.Value = Encoding.ASCII.GetBytes(message);
+                propItem.Len = propItem.Value.Length;
+
+                // Добавляем или заменяем свойство в изображении
+                bool found = false;
+            }
+        }
+    }
+
 } 
 
 
