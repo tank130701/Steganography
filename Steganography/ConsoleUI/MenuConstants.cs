@@ -8,27 +8,27 @@ namespace Steganography.ConsoleUI
 {
     internal static class MainMenuButtons
     {
-        public const string EncodeMessage = "Закодировать сообщение";
-        public const string DecodeMessage = "Декодировать сообщение";
-        public const string Exit = "Выход";
+        public const string EncodeMessage = "Encode message";
+        public const string DecodeMessage = "Decode message";
+        public const string Exit = "Exit";
     }
 
     internal static class EncodeMenuButtons
     {
-        public const string SelectImage = "Выбрать изображение";
-        public const string SelectAlgorithm = "Выбрать алгоритм";
-        public const string WriteMessage = "Написать сообщение";
-        public const string EncodeMessage = "Закодировать сообщение";
-        public const string BackToMainMenu = "Вернуться в главное меню";
+        public const string SelectImage = "Select Image";
+        public const string SelectAlgorithm = "Select Algorithm";
+        public const string WriteMessage = "Write a message";
+        public const string EncodeMessage = "Encode message";
+        public const string BackToMainMenu = "Back to Main Menu";
 
     }
 
     internal static class DecodeMenuButtons
     {
-        public const string SelectImage = "Выбрать изображение";
-        public const string SelectAlgorithm = "Выбрать алгоритм";
-        public const string DecodeMessage = "Декодировать сообщение";
-        public const string BackToMainMenu = "Вернуться в главное меню";
+        public const string SelectImage = "Select Image";
+        public const string SelectAlgorithm = "Select Algorithm";
+        public const string DecodeMessage = "Decode message";
+        public const string BackToMainMenu = "Back to Main Menu";
 
     }
 
@@ -41,7 +41,7 @@ namespace Steganography.ConsoleUI
         public const string Dct = "Encoding in DCT coefficients (DCT)";
         public const string F5 = "F5 Steganography (F5)";
         public const string Eof = "EOF";
-        public const string BackToMenu = "Вернуться в главное меню";
+        public const string BackToMenu = "Back to Main Menu";
     }
 
 }
