@@ -9,10 +9,25 @@ namespace Steganography.Repository
 {
     public class Repository : IRepository
     {
-        private const string _root = "./";
-        private const string _encodedImagesDirectory = "./EncodedImages/";
-        private const string _imagesForEncodingDirectory = "./ImagesForEncoding/";
-        
+        private const string TextRoot = "./";
+        private const string TextEncodedImagesDirectory = "./EncodedImages/";
+        private const string TextImagesForEncodingDirectory = "./ImagesForEncoding/";
+
+        public Repository()
+        {
+            if (!Directory.Exists(TextEncodedImagesDirectory))
+            {
+                Directory.CreateDirectory(TextEncodedImagesDirectory);
+                Console.WriteLine("Directory EncodedImages has been created");
+            }
+
+            if (!Directory.Exists(TextImagesForEncodingDirectory))
+            {
+                Directory.CreateDirectory(TextImagesForEncodingDirectory);
+                Console.WriteLine("Directory ImagesForEncoding has been created");
+            }
+        }
+
         public Bitmap LoadImageToBitmap(string imagePath)
         {
             if (!File.Exists(imagePath))
@@ -32,7 +47,7 @@ namespace Steganography.Repository
             Guid guid = Guid.NewGuid();
             var uuid = guid.ToString();
             var newImage = $"{uuid}.jpg";
-            var newImagePath = _encodedImagesDirectory + newImage;
+            var newImagePath = TextEncodedImagesDirectory + newImage;
             
             image.Save(newImagePath, ImageFormat.Png);
 
@@ -63,7 +78,7 @@ namespace Steganography.Repository
                 Guid guid = Guid.NewGuid();
                 var uuid = guid.ToString();
                 var newImage = $"{uuid}.jpg";
-                var newImagePath = _encodedImagesDirectory + newImage;
+                var newImagePath = TextEncodedImagesDirectory + newImage;
                 
                 using (FileStream fs = new FileStream(newImagePath, FileMode.Create, FileAccess.Write))
                 {
@@ -85,7 +100,7 @@ namespace Steganography.Repository
                 string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
                 foreach (string extension in imageExtensions)
                 {
-                    string[] files = Directory.GetFiles(_root + directoryPath, "*" + extension);
+                    string[] files = Directory.GetFiles(TextRoot + directoryPath, "*" + extension);
                     imageFileList.AddRange(files);
                 }
             }
