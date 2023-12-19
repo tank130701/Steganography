@@ -18,5 +18,6 @@ namespace Steganography.Service.Decoder
 
             return "";
         }
+        public List<string> GetImageFilesInDirectory() => repository.GetImageFilesInDirectory("EncodedImages");
     }
 }
