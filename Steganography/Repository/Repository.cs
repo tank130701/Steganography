@@ -32,7 +32,7 @@ namespace Steganography.Repository
         {
             if (!File.Exists(imagePath))
             {
-                throw new FileNotFoundException("Файл не найден", imagePath);
+                throw new FileNotFoundException("FileNotFound", imagePath);
             }
 
             return new Bitmap(imagePath);
@@ -42,8 +42,9 @@ namespace Steganography.Repository
         {
             if (image == null)
             {
-                throw new ArgumentNullException(nameof(image), "Изображение не может быть null");
+                throw new ArgumentNullException(nameof(image), "Image cannot be null!");
             }
+            
             Guid guid = Guid.NewGuid();
             var uuid = guid.ToString();
             var newImage = $"{uuid}.jpg";
@@ -72,7 +73,7 @@ namespace Steganography.Repository
         {
                 if (image == null || image.Length == 0)
                 {
-                    throw new ArgumentException("Данные изображения пусты", nameof(image));
+                    throw new ArgumentException("Image cannot be null!", nameof(image));
                 }
                 
                 Guid guid = Guid.NewGuid();
