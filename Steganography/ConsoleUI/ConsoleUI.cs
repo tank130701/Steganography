@@ -68,6 +68,7 @@ namespace Steganography.ConsoleUI
                     EncodeAlgorithmsButtons.Palette,
                     EncodeAlgorithmsButtons.Dct,
                     EncodeAlgorithmsButtons.F5,
+                    EncodeAlgorithmsButtons.Eof,
                     EncodeAlgorithmsButtons.BackToMenu
                 },algorithmsMenuInfo);
 
@@ -155,6 +156,7 @@ namespace Steganography.ConsoleUI
                             } 
                             break;
                         case EncodeMenuButtons.EncodeMessage:
+                            encoder.EncodeMessage(_selectedFilePath, _selectedAlgorithm, _messageToEncode);
                             break;
                         case EncodeMenuButtons.BackToMainMenu:
                             currentMenuStates = MenuStates.MainMenu;
@@ -165,18 +167,24 @@ namespace Steganography.ConsoleUI
                     switch (button)
                     {
                         case DecodeMenuButtons.SelectImage: 
-                            Console.WriteLine("Вы выбрали опцию SelectImage в DecodeMenu");
+                            currentMenuStates = MenuStates.SelectFileToDecodeMenu;
                             break;
                         case DecodeMenuButtons.SelectAlgorithm:
                             currentMenuStates = MenuStates.AlgorithmsMenu;
                             break;
                         case DecodeMenuButtons.DecodeMessage:
-                            Console.WriteLine("Вы выбрали опцию DecodeMessage в DecodeMenu");
+                            var message = decoder.DecodeMessage(_selectedFilePath, _selectedAlgorithm);
+                            Console.WriteLine($"Decoded Message: {message}");
                             break;
                         case DecodeMenuButtons.BackToMainMenu:
                             currentMenuStates = MenuStates.MainMenu;
                             break;
                     }
+                    break;
+                case MenuStates.SelectFileToDecodeMenu:
+                    _selectedFilePath = button;
+                    FileChanged?.Invoke(_selectedFilePath);
+                    currentMenuStates = MenuStates.DecodeMenu;
                     break;
                 case MenuStates.SelectFileToEncodeMenu:
                     _selectedFilePath = button;
@@ -213,6 +221,11 @@ namespace Steganography.ConsoleUI
                             break;
                         case EncodeAlgorithmsButtons.F5:
                             _selectedAlgorithm = EncodeAlgorithms.F5;
+                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
+                            currentMenuStates = MenuStates.EncodeMenu;
+                            break;
+                        case EncodeAlgorithmsButtons.Eof:
+                            _selectedAlgorithm = EncodeAlgorithms.Eof;
                             AlgorithmChanged?.Invoke(_selectedAlgorithm);
                             currentMenuStates = MenuStates.EncodeMenu;
                             break;
