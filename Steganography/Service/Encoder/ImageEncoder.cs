@@ -5,7 +5,7 @@ namespace Steganography.Service.Encoder;
 
 public class ImageEncoder(IRepository repository) : IImageEncoder
 {
-    public void EncodeText(string imagePath, string outputImagePath, string message, string algorithm)
+    public void EncodeMessage(string imagePath, string message, string algorithm)
     {
         switch (algorithm)
         {
