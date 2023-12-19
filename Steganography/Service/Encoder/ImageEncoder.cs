@@ -14,7 +14,7 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
                 var encodedImage = EOFWriter.WritePastEOFMarker(image, message);
                 repository.SaveImageFromBytes(encodedImage);                
                 break;
-                
+            
         }
     }
     

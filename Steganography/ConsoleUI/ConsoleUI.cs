@@ -12,11 +12,24 @@ namespace Steganography.ConsoleUI
         private string _selectedFilePath = "The file is not selected. Select a file.";
         public delegate void ChangeAlgorithm(string newText);
         public delegate void ChangeMessage(string newText);
-
         public delegate void ChangeFile(string newText);
         public event ChangeAlgorithm? AlgorithmChanged;
         public event ChangeMessage? MessageChanged;
         public event ChangeFile? FileChanged;
+
+        private MenuStates ChangeEncodeAlgorithm(string algorithm)
+        {
+            _selectedAlgorithm = algorithm;
+            AlgorithmChanged?.Invoke(_selectedAlgorithm);
+            return MenuStates.EncodeMenu;
+        }
+        
+        private MenuStates ChangeDecodeAlgorithm(string algorithm)
+        {
+            _selectedAlgorithm = algorithm;
+            AlgorithmChanged?.Invoke(_selectedAlgorithm);
+            return MenuStates.DecodeMenu;
+        }
         
         public void Run()
         {
@@ -80,13 +93,13 @@ namespace Steganography.ConsoleUI
                 selectingFileToEncodeInfo
                 );
             
-            // Info selectingFileToDecodeInfo = null;
-            // var filesToDecode = decoder.GetImageFilesInDirectory();
-            // ConsoleMenu selectingFileToDecodeMenu = new ConsoleMenu(
-            //     "Select File",
-            //     filesToDecode,
-            //     selectingFileToDecodeInfo
-            // );
+            Info selectingFileToDecodeInfo = null;
+            var filesToDecode = decoder.GetImageFilesInDirectory();
+            ConsoleMenu selectingFileToDecodeMenu = new ConsoleMenu(
+                "Select File",
+                filesToDecode,
+                selectingFileToDecodeInfo
+            );
             
             AlgorithmChanged += encodeInfo.IsAlgorithmChanged;
             AlgorithmChanged += decodeInfo.IsAlgorithmChanged;
@@ -108,11 +121,17 @@ namespace Steganography.ConsoleUI
                     case MenuStates.DecodeMenu:
                         button = decodeMenu.DisplayMenu();
                         break;
-                    case MenuStates.AlgorithmsMenu:
+                    case MenuStates.AlgorithmsEncodeMenu:
+                        button = algorithmsMenu.DisplayMenu();
+                        break;
+                    case MenuStates.AlgorithmsDecodeMenu:
                         button = algorithmsMenu.DisplayMenu();
                         break;
                     case MenuStates.SelectFileToEncodeMenu:
                         button = selectingFileToEncodeMenu.DisplayMenu();
+                        break;
+                    case MenuStates.SelectFileToDecodeMenu:
+                        button = selectingFileToDecodeMenu.DisplayMenu();
                         break;
                 }
                 HandleInput(button, ref menuStates);
@@ -144,7 +163,7 @@ namespace Steganography.ConsoleUI
                             currentMenuStates = MenuStates.SelectFileToEncodeMenu;
                             break;
                         case EncodeMenuButtons.SelectAlgorithm:
-                            currentMenuStates = MenuStates.AlgorithmsMenu;
+                            currentMenuStates = MenuStates.AlgorithmsEncodeMenu;
                             break;
                         case EncodeMenuButtons.WriteMessage:
                             Console.Write("\nEnter a message: ");
@@ -156,7 +175,7 @@ namespace Steganography.ConsoleUI
                             } 
                             break;
                         case EncodeMenuButtons.EncodeMessage:
-                            encoder.EncodeMessage(_selectedFilePath, _selectedAlgorithm, _messageToEncode);
+                            encoder.EncodeMessage(_selectedFilePath, _messageToEncode, _selectedAlgorithm);
                             break;
                         case EncodeMenuButtons.BackToMainMenu:
                             currentMenuStates = MenuStates.MainMenu;
@@ -170,7 +189,7 @@ namespace Steganography.ConsoleUI
                             currentMenuStates = MenuStates.SelectFileToDecodeMenu;
                             break;
                         case DecodeMenuButtons.SelectAlgorithm:
-                            currentMenuStates = MenuStates.AlgorithmsMenu;
+                            currentMenuStates = MenuStates.AlgorithmsDecodeMenu;
                             break;
                         case DecodeMenuButtons.DecodeMessage:
                             var message = decoder.DecodeMessage(_selectedFilePath, _selectedAlgorithm);
@@ -191,46 +210,61 @@ namespace Steganography.ConsoleUI
                     FileChanged?.Invoke(_selectedFilePath);
                     currentMenuStates = MenuStates.EncodeMenu;
                     break;
-                case MenuStates.AlgorithmsMenu:
+                case MenuStates.AlgorithmsEncodeMenu:
                     switch (button)
                     {
-                        case EncodeAlgorithmsButtons.Lsb:
-                            _selectedAlgorithm = EncodeAlgorithms.Lsb;
-                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
-                            currentMenuStates = MenuStates.EncodeMenu;
+                        case EncodeAlgorithmsButtons.Lsb: 
+                            currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.Lsb);
                             break;
-                        case EncodeAlgorithmsButtons.AlphaChannel:
-                            _selectedAlgorithm = EncodeAlgorithms.AlphaChannel;
-                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
-                            currentMenuStates = MenuStates.EncodeMenu;
+                        case EncodeAlgorithmsButtons.AlphaChannel: 
+                            currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.AlphaChannel);
                             break;
                         case EncodeAlgorithmsButtons.Palette:
-                            _selectedAlgorithm = EncodeAlgorithms.Palette;
-                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
-                            currentMenuStates = MenuStates.EncodeMenu;
+                            currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.Palette);
                             break;
-                        case EncodeAlgorithmsButtons.Metadata:
-                            _selectedAlgorithm = EncodeAlgorithms.Metadata;
-                             AlgorithmChanged?.Invoke(_selectedAlgorithm);
-                            currentMenuStates = MenuStates.EncodeMenu;
+                        case EncodeAlgorithmsButtons.Metadata: 
+                            currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.Metadata);
                             break;
                         case EncodeAlgorithmsButtons.Dct:
-                            _selectedAlgorithm = EncodeAlgorithms.Dct;
-                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
-                            currentMenuStates = MenuStates.EncodeMenu;
+                            currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.Dct);
                             break;
                         case EncodeAlgorithmsButtons.F5:
-                            _selectedAlgorithm = EncodeAlgorithms.F5;
-                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
-                            currentMenuStates = MenuStates.EncodeMenu;
+                            currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.F5);
                             break;
                         case EncodeAlgorithmsButtons.Eof:
-                            _selectedAlgorithm = EncodeAlgorithms.Eof;
-                            AlgorithmChanged?.Invoke(_selectedAlgorithm);
-                            currentMenuStates = MenuStates.EncodeMenu;
+                            currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.Eof);
                             break;
                         case EncodeAlgorithmsButtons.BackToMenu:
                             currentMenuStates = MenuStates.EncodeMenu;
+                            break;
+                    }
+                    break;
+                case MenuStates.AlgorithmsDecodeMenu:
+                    switch (button)
+                    {
+                        case EncodeAlgorithmsButtons.Lsb: 
+                            currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.Lsb);
+                            break;
+                        case EncodeAlgorithmsButtons.AlphaChannel: 
+                            currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.AlphaChannel);
+                            break;
+                        case EncodeAlgorithmsButtons.Palette:
+                            currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.Palette);
+                            break;
+                        case EncodeAlgorithmsButtons.Metadata: 
+                            currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.Metadata);
+                            break;
+                        case EncodeAlgorithmsButtons.Dct:
+                            currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.Dct);
+                            break;
+                        case EncodeAlgorithmsButtons.F5:
+                            currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.F5);
+                            break;
+                        case EncodeAlgorithmsButtons.Eof:
+                            currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.Eof);
+                            break;
+                        case EncodeAlgorithmsButtons.BackToMenu:
+                            currentMenuStates = MenuStates.DecodeMenu;
                             break;
                     }
                     break;

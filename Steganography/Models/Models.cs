@@ -5,7 +5,8 @@ public enum MenuStates
     MainMenu,
     EncodeMenu,
     DecodeMenu,
-    AlgorithmsMenu,
+    AlgorithmsEncodeMenu,
+    AlgorithmsDecodeMenu,
     SelectFileToEncodeMenu,
     SelectFileToDecodeMenu,
     Exit
