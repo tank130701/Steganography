@@ -7,7 +7,7 @@ namespace Steganography.Service
     internal interface IImageDecoder
     {
         void DecodeText(string imagePath);
-
+    }
 
     internal class ImageDecoder : IImageDecoder
     {
@@ -38,5 +38,19 @@ namespace Steganography.Service
 
             Console.WriteLine("Decoded Text: " + decodedText.ToString());
         }
-    }
+        
+        internal class AlphaChannelImageDecoder : IImageDecoder
+        {
+            public void DecodeText(string imagePath)
+            {
+                Bitmap bmp = new Bitmap(imagePath);
+                StringBuilder decodedText = new StringBuilder();
+
+                // Предположим, что длина сообщения хранится в альфа-канале первого пикселя
+                Color firstPixel = bmp.GetPixel(0, 0);
+                int messageLength = firstPixel.A;
+            }
+
+
+        }
 }
