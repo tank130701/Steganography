@@ -12,6 +12,10 @@ namespace Steganography.Service.Encoder
     }
     public class ImageEncoder : IImageEncoder
         {
+            public void EncodeText(string imagePath, string outputImagePath, string message, string algorithm)
+                    {
+                        Bitmap bmp = new Bitmap(imagePath);
+                        int messageIndex = 0;
 
         }
 }
