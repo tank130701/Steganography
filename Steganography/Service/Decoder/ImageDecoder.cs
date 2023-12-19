@@ -1,13 +1,22 @@
 using Steganography.Repository;
+using Steganography.Service.Algorithms;
 
 namespace Steganography.Service.Decoder
 {
     public class ImageDecoder(IRepository repository) : IImageDecoder
     {
-        private readonly IRepository _repository = repository;
-        public void DecodeText(string imagePath, string algorithm)
+        public string DecodeMessage(string imagePath, string algorithm)
         {
-            throw new NotImplementedException();
+            switch (algorithm)
+            {
+                case EncodeAlgorithms.Eof:
+                    var image = repository.LoadImageToBytes(imagePath);
+                    var decodedMessgae = EOFReader.ReadPastEOFMarker(image);
+                    if (decodedMessgae != null) return decodedMessgae;
+                    return "Image does not have a message";
+            }
+
+            return "";
         }
     }
 }

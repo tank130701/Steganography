@@ -2,7 +2,7 @@
 {
     public interface IImageEncoder
     {
-        void EncodeText(string imagePath, string outputImagePath, string text, string algorithm);
+        void EncodeText(string imagePath, string outputImagePath, string message, string algorithm);
         public List<string> GetImageFilesInDirectory();
     }
 }
