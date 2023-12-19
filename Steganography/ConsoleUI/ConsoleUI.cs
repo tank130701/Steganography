@@ -7,8 +7,6 @@ namespace Steganography.ConsoleUI
 {
     public class ConsoleUi(IImageEncoder encoder, IImageDecoder decoder) : IConsoleUi
     {
-        private readonly IImageEncoder _encoder = encoder;
-        private readonly IImageDecoder _decoder = decoder;
         private string _messageToEncode = "The message is empty. Write a message.";
         private string _selectedAlgorithm = "The encoding algorithm is not selected. Select an algorithm.";
         private string _selectedFilePath = "The file is not selected. Select a file.";
@@ -18,7 +16,6 @@ namespace Steganography.ConsoleUI
         public delegate void ChangeFile(string newText);
         public event ChangeAlgorithm? AlgorithmChanged;
         public event ChangeMessage? MessageChanged;
-
         public event ChangeFile? FileChanged;
         
         public void Run()
