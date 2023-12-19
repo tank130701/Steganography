@@ -176,6 +176,9 @@ namespace Steganography.ConsoleUI
                             break;
                         case EncodeMenuButtons.EncodeMessage:
                             encoder.EncodeMessage(_selectedFilePath, _messageToEncode, _selectedAlgorithm);
+                            Console.WriteLine("The message was successfully encoded");
+                            Console.WriteLine("Press any key to continue...");
+                            Console.ReadLine();
                             break;
                         case EncodeMenuButtons.BackToMainMenu:
                             currentMenuStates = MenuStates.MainMenu;
