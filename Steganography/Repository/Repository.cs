@@ -9,6 +9,10 @@ namespace Steganography.Repository
 {
     public class Repository : IRepository
     {
+        private const string _root = "./";
+        private const string _encodedImagesDirectory = "./EncodedImages/";
+        private const string _imagesForEncodingDirectory = "./ImagesForEncoding/";
+        
         public Bitmap LoadImageToBitmap(string imagePath)
         {
             if (!File.Exists(imagePath))
@@ -25,32 +29,28 @@ namespace Steganography.Repository
             {
                 throw new ArgumentNullException(nameof(image), "Изображение не может быть null");
             }
+            Guid guid = Guid.NewGuid();
+            var uuid = guid.ToString();
+            var newImage = $"{uuid}.jpg";
+            var newImagePath = _encodedImagesDirectory + newImage;
+            
+            image.Save(newImagePath, ImageFormat.Png);
 
-            string path = Path.Combine("path_to_save_directory", $"{Guid.NewGuid()}.png");
-
-            // Сохранение в формате PNG, можно выбрать другой формат, если нужно
-            image.Save(path, ImageFormat.Png);
-
-            return path;
+            return newImagePath;
         }
 
         public byte[] LoadImageToBytes(string imagePath)
-        {
-              if (!File.Exists(imagePath))
-         {
-             throw new FileNotFoundException("Файл не найден", imagePath);
-         }
+        { 
+            if (!File.Exists(imagePath))
+            {
+                throw new FileNotFoundException("FileNotFound", imagePath);
+            }
 
-         using (Image image = Image.FromFile(imagePath))
-         {
-             using (MemoryStream ms = new MemoryStream())
-             {
-                 // Сохранение изображения в MemoryStream
-                 image.Save(ms, image.RawFormat);
+            using FileStream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+            using BinaryReader br = new BinaryReader(fs);
+            var fileBytes = br.ReadBytes((int)fs.Length);
 
-                 return ms.ToArray();
-             }
-         }
+            return fileBytes;
         }
 
         public string SaveImageFromBytes(byte[] image)
@@ -59,32 +59,33 @@ namespace Steganography.Repository
                 {
                     throw new ArgumentException("Данные изображения пусты", nameof(image));
                 }
-
-                string path = Path.Combine("path_to_save_directory", $"{Guid.NewGuid()}.png");
-
-                using (MemoryStream ms = new MemoryStream(image))
+                
+                Guid guid = Guid.NewGuid();
+                var uuid = guid.ToString();
+                var newImage = $"{uuid}.jpg";
+                var newImagePath = _encodedImagesDirectory + newImage;
+                
+                using (FileStream fs = new FileStream(newImagePath, FileMode.Create, FileAccess.Write))
                 {
-                    using (Image img = Image.FromStream(ms))
+                    using (BinaryWriter bw = new BinaryWriter(fs))
                     {
-                        // Сохранение изображения
-                        img.Save(path, ImageFormat.Png);
+                        bw.Write(image);
                     }
                 }
 
-                return path;
-            }
+                return newImagePath;
+        }
         
 
         public List<string> GetImageFilesInDirectory(string directoryPath)
         {
             List<string> imageFileList = new List<string>();
-            const string root = "./";
             try
             {
                 string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
                 foreach (string extension in imageExtensions)
                 {
-                    string[] files = Directory.GetFiles(root + directoryPath, "*" + extension);
+                    string[] files = Directory.GetFiles(_root + directoryPath, "*" + extension);
                     imageFileList.AddRange(files);
                 }
             }
