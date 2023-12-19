@@ -53,4 +53,19 @@ namespace Steganography.Service.Encoder
             throw new NotImplementedException();
         }
     }
+
+    public class AlphaChannelImageEncoder : IImageEncoder
+    {
+        public void EncodeText(string imagePath, string outputImagePath, string message)
+        {
+            Bitmap bmp = new Bitmap(imagePath);
+            int messageIndex = 0;
+
+            // Убедитесь, что сообщение помещается в изображение
+            if (message.Length > bmp.Width * bmp.Height - 1)
+            {
+                throw new InvalidOperationException("Сообщение слишком велико для данного изображения.");
+            }
+        }
+    }
 }
