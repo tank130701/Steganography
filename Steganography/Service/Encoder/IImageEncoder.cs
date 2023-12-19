@@ -98,6 +98,23 @@ namespace Steganography.Service.Encoder
 
                 // Добавляем или заменяем свойство в изображении
                 bool found = false;
+                for (int i = 0; i < image.PropertyItems.Length; i++)
+                {
+                    if (image.PropertyItems[i].Id == ExifCommentId)
+                    {
+                        image.PropertyItems[i] = propItem;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    image.SetPropertyItem(propItem);
+                }
+
+                // Сохраняем изображение с новыми метаданными
+                image.Save(outputImagePath, ImageFormat.Jpeg); // или другой формат, если требуется
             }
         }
     }
