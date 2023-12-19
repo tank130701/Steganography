@@ -75,7 +75,29 @@ namespace Steganography.Service
             public void DecodeText(string imagePath)
             {
                 using (Image image = Image.FromFile(imagePath))
+                {
+                    // Идентификатор комментария EXIF
+                    const int ExifCommentId = 0x9286;
+
+                    // Находим свойство среди метаданных изображения
+                    var propItem = image.PropertyItems.FirstOrDefault(item => item.Id == ExifCommentId);
+
+                    if (propItem != null)
+                    {
+                        // Декодируем значение свойства (предполагая, что оно в формате ASCII)
+                        string decodedText = Encoding.ASCII.GetString(propItem.Value);
+
+                        Console.WriteLine("Decoded Text: " + decodedText);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No comment property found in image metadata.");
+                    }
+                }
+
             }
+
         }
+
     }
-}
+} 
