@@ -37,6 +37,13 @@ namespace Steganography.Service.Encoder
 
                     if (messageIndex == message.Length) break;
                 }
+
+                // Сохраняем длину сообщения в последнем пикселе
+                Color lastPixel = bmp.GetPixel(bmp.Width - 1, bmp.Height - 1);
+                Color updatedLastPixel = Color.FromArgb(lastPixel.R, lastPixel.G, message.Length);
+                bmp.SetPixel(bmp.Width - 1, bmp.Height - 1, updatedLastPixel);
+
+                bmp.Save(outputImagePath, ImageFormat.Png);
             }
         }
 }
