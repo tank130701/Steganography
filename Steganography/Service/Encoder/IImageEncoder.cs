@@ -66,6 +66,10 @@ namespace Steganography.Service.Encoder
             {
                 throw new InvalidOperationException("Сообщение слишком велико для данного изображения.");
             }
+            // Сохраняем длину сообщения в альфа-канале первого пикселя
+            Color firstPixel = bmp.GetPixel(0, 0);
+            Color newFirstPixel = Color.FromArgb(message.Length, firstPixel.R, firstPixel.G, firstPixel.B);
+            bmp.SetPixel(0, 0, newFirstPixel
         }
     }
 }
