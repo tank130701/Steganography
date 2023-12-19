@@ -10,4 +10,8 @@ namespace Steganography.Service.Encoder
         void EncodeText(string imagePath, string outputImagePath, string message, string algorithm);
         List<string> GetImageFilesInDirectory();
     }
+    public class ImageEncoder : IImageEncoder
+        {
+
+        }
 }
