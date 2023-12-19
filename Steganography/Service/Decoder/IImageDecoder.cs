@@ -18,12 +18,13 @@ namespace Steganography.Service
             StringBuilder decodedText = new StringBuilder();
 
             Color lastPixel = bmp.GetPixel(bmp.Width - 1, bmp.Height - 1);
-            int messageLength = lastPixel.B; // Предположим, что длина сообщения хранится в синем канале последнего пикселя
+            int messageLength =
+                lastPixel.B; // Предположим, что длина сообщения хранится в синем канале последнего пикселя
 
             for (int i = 0, colorIndex = 0; i < messageLength; i++)
             {
                 Color pixel = bmp.GetPixel(colorIndex % bmp.Width, colorIndex / bmp.Width);
-                
+
                 // Извлекаем биты символа из каждого канала цвета
                 int value = pixel.R;
                 value = (value << 8) + pixel.G;
@@ -38,7 +39,7 @@ namespace Steganography.Service
 
             Console.WriteLine("Decoded Text: " + decodedText.ToString());
         }
-        
+
         internal class AlphaChannelImageDecoder : IImageDecoder
         {
             public void DecodeText(string imagePath)
@@ -49,8 +50,24 @@ namespace Steganography.Service
                 // Предположим, что длина сообщения хранится в альфа-канале первого пикселя
                 Color firstPixel = bmp.GetPixel(0, 0);
                 int messageLength = firstPixel.A;
+
+                for (int i = 1; i <= messageLength; i++)
+                {
+                    int x = i % bmp.Width;
+                    int y = i / bmp.Width;
+
+                    if (y >= bmp.Height)
+                    {
+                        throw new InvalidOperationException("Изображение не содержит полного сообщения.");
+                    }
+
+                    Color pixel = bmp.GetPixel(x, y);
+                    char character = (char)pixel.A; // Извлекаем символ из альфа-канала
+                    decodedText.Append(character);
+                }
+
+                Console.WriteLine("Decoded Text: " + decodedText.ToString());
             }
-
-
         }
+    }
 }
