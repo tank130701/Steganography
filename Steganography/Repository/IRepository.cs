@@ -17,7 +17,7 @@ namespace Steganography.Repository
   
         Bitmap LoadImageToBitmap(string imagePath);
         string SaveImageFromBitmap(Bitmap image);
-        byte[] LoadImageToBytes(string imagePath);
+        byte[] LoadImageToBytes(string imageFolder, string imagePath);
         string SaveImageFromBytes(byte[] image);
         List<string> GetImageFilesInDirectory(string directoryPath);
     }

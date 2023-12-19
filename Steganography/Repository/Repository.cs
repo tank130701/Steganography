@@ -55,8 +55,14 @@ namespace Steganography.Repository
             return newImagePath;
         }
 
-        public byte[] LoadImageToBytes(string imagePath)
-        { 
+        public byte[] LoadImageToBytes(string imageFolder, string imageName)
+        {
+            var imagePath = "";
+            switch (imageFolder)
+            {
+                case "encode": imagePath = TextImagesForEncodingDirectory + imageName; break;
+                case "decode": imagePath = TextEncodedImagesDirectory + imageName; break;
+            }
             if (!File.Exists(imagePath))
             {
                 throw new FileNotFoundException("FileNotFound", imagePath);
@@ -102,7 +108,11 @@ namespace Steganography.Repository
                 foreach (string extension in imageExtensions)
                 {
                     string[] files = Directory.GetFiles(TextRoot + directoryPath, "*" + extension);
-                    imageFileList.AddRange(files);
+                    foreach (string file in files)
+                    {
+                        string fileName = Path.GetFileName(file);
+                        imageFileList.Add(fileName);
+                    }
                 }
             }
             catch (IOException ex)

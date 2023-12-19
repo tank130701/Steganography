@@ -10,7 +10,7 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
         switch (algorithm)
         {
             case EncodeAlgorithms.Eof:
-                var image = repository.LoadImageToBytes(imagePath);
+                var image = repository.LoadImageToBytes("encode", imagePath);
                 var encodedImage = EOFWriter.WritePastEOFMarker(image, message);
                 repository.SaveImageFromBytes(encodedImage);                
                 break;
