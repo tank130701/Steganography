@@ -85,4 +85,7 @@ namespace Steganography.Service.Encoder
             bmp.Save(outputImagePath, ImageFormat.Png);
         }
     }
-}
+} 
+
+
+

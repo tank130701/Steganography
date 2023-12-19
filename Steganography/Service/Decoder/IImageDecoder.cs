@@ -69,5 +69,13 @@ namespace Steganography.Service
                 Console.WriteLine("Decoded Text: " + decodedText.ToString());
             }
         }
+
+        internal class MetadataImageDecoder : IImageDecoder
+        {
+            public void DecodeText(string imagePath)
+            {
+                using (Image image = Image.FromFile(imagePath))
+            }
+        }
     }
 }
