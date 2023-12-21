@@ -5,12 +5,12 @@ namespace Steganography.Service.Encoder;
 
 public class ImageEncoder(IRepository repository) : IImageEncoder
 {
-    public void EncodeText(string imagePath, string outputImagePath, string message, string algorithm)
+    public void EncodeMessage(string imagePath, string message, string algorithm)
     {
         switch (algorithm)
         {
             case EncodeAlgorithms.Eof:
-                var image = repository.LoadImageToBytes(imagePath);
+                var image = repository.LoadImageToBytes("encode", imagePath);
                 var encodedImage = EOFWriter.WritePastEOFMarker(image, message);
                 repository.SaveImageFromBytes(encodedImage);                
                 break;

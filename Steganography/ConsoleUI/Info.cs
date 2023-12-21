@@ -23,5 +23,9 @@ public class Info(string selectedAlgorithm, string selectedFilePath, string mess
         MessageToEncode = newText;
     }
     
+    public void IsFileChanged(string newText)
+    {
+        SelectedFilePath = newText;
+    }
     
 }

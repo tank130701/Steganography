@@ -10,7 +10,7 @@ namespace Steganography.Service.Decoder
             switch (algorithm)
             {
                 case EncodeAlgorithms.Eof:
-                    var image = repository.LoadImageToBytes(imagePath);
+                    var image = repository.LoadImageToBytes("decode", imagePath);
                     var decodedMessgae = EOFReader.ReadPastEOFMarker(image);
                     if (decodedMessgae != null) return decodedMessgae;
                     return "Image does not have a message";
