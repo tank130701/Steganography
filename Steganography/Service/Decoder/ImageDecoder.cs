@@ -1,5 +1,6 @@
 using Steganography.Repository;
 using Steganography.Service.Algorithms;
+using Steganography.Service.Algorithms.EOF;
 
 namespace Steganography.Service.Decoder
 {

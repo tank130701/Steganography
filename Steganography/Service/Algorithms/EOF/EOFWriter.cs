@@ -2,7 +2,7 @@ using System.Text;
 using Steganography.Service.Utils;
 using Steganography.Service.Utils.Enums;
 
-namespace Steganography.Service.Algorithms;
+namespace Steganography.Service.Algorithms.EOF;
 
 public static class EOFWriter
 {
