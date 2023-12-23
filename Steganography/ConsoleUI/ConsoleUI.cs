@@ -197,11 +197,19 @@ namespace Steganography.ConsoleUI
                             currentMenuStates = MenuStates.AlgorithmsDecodeMenu;
                             break;
                         case DecodeMenuButtons.DecodeMessage:
-                            var message = decoder.DecodeMessage(_selectedFilePath, _selectedAlgorithm);
-                            Console.WriteLine($"Decoded Message: {message}");
-                            Console.WriteLine("Press any key to continue...");
-                            Console.ReadLine();
-                            break;
+                            try
+                            {
+                                var message = decoder.DecodeMessage(_selectedFilePath, _selectedAlgorithm);
+                                Console.WriteLine($"Decoded Message: {message}");
+                                Console.WriteLine("Press any key to continue...");
+                                Console.ReadLine();
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                throw;
+                            }
                         case DecodeMenuButtons.BackToMainMenu:
                             currentMenuStates = MenuStates.MainMenu;
                             break;

@@ -9,6 +9,21 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
     private byte[] _encodedImage;
     public void EncodeMessage(string imagePath, string message, string algorithm)
     {
+        if (message is "The message is empty. Write a message." or "")
+        {
+            throw new Exception("The message is empty. Write a message.");
+        }
+
+        if (algorithm == "The encoding algorithm is not selected. Select an algorithm.")
+        {
+            throw new Exception("The encoding algorithm is not selected. Select an algorithm.");
+        }
+
+        if (imagePath == "The file is not selected. Select a file.")
+        {
+            throw new Exception("The file is not selected. Select a file.");
+        }
+        
         switch (algorithm)
         {
             case EncodeAlgorithms.Eof:
