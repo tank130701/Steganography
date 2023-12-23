@@ -36,6 +36,8 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
                 _encodedImage = Algorithms.Metadata.MetadataWriter.WriteMessageToMetadata(_image, message);
                 repository.SaveImageFromBytes(_encodedImage);
                 break;
+            default:
+                throw new Exception("This Method is not Implemented.");
         }
     }
     

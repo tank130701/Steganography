@@ -8,6 +8,16 @@ namespace Steganography.Service.Decoder
     {
         public string DecodeMessage(string imagePath, string algorithm)
         {
+            if (algorithm == "The encoding algorithm is not selected. Select an algorithm.")
+            {
+                throw new Exception("The encoding algorithm is not selected. Select an algorithm.");
+            }
+
+            if (imagePath == "The file is not selected. Select a file.")
+            {
+                throw new Exception("The file is not selected. Select a file.");
+            }
+            
             switch (algorithm)
             {
                 case EncodeAlgorithms.Eof:
