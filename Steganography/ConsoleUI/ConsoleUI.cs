@@ -177,11 +177,20 @@ namespace Steganography.ConsoleUI
                             } 
                             break;
                         case EncodeMenuButtons.EncodeMessage:
-                            encoder.EncodeMessage(_selectedFilePath, _messageToEncode, _selectedAlgorithm);
-                            Console.WriteLine("The message was successfully encoded");
-                            Console.WriteLine("Press any key to continue...");
-                            Console.ReadLine();
-                            break;
+                            try
+                            {
+                                encoder.EncodeMessage(_selectedFilePath, _messageToEncode, _selectedAlgorithm);
+                                Console.WriteLine("The message was successfully encoded");
+                                Console.WriteLine("Press any key to continue...");
+                                Console.ReadLine();
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                throw;
+                            }
+                            
                         case EncodeMenuButtons.BackToMainMenu:
                             currentMenuStates = MenuStates.MainMenu;
                             break;
@@ -197,11 +206,20 @@ namespace Steganography.ConsoleUI
                             currentMenuStates = MenuStates.AlgorithmsDecodeMenu;
                             break;
                         case DecodeMenuButtons.DecodeMessage:
-                            var message = decoder.DecodeMessage(_selectedFilePath, _selectedAlgorithm);
-                            Console.WriteLine($"Decoded Message: {message}");
-                            Console.WriteLine("Press any key to continue...");
-                            Console.ReadLine();
-                            break;
+                            try
+                            {
+                                var message = decoder.DecodeMessage(_selectedFilePath, _selectedAlgorithm);
+                                Console.WriteLine($"Decoded Message: {message}");
+                                Console.WriteLine("Press any key to continue...");
+                                Console.ReadLine();
+                                break;
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                throw;
+                            }
+                            
                         case DecodeMenuButtons.BackToMainMenu:
                             currentMenuStates = MenuStates.MainMenu;
                             break;
