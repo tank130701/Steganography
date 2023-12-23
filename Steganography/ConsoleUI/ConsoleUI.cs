@@ -182,12 +182,13 @@ namespace Steganography.ConsoleUI
                                 encoder.EncodeMessage(_selectedFilePath, _messageToEncode, _selectedAlgorithm);
                                 Console.WriteLine("The message was successfully encoded");
                                 Console.WriteLine("Press any key to continue...");
-                                Console.ReadLine();
+                                Console.ReadKey();
                                 break;
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine(e);
+                                Console.WriteLine(e.Message);
+                                Console.ReadKey();
                                 break;
                             }
                             
@@ -211,12 +212,13 @@ namespace Steganography.ConsoleUI
                                 var message = decoder.DecodeMessage(_selectedFilePath, _selectedAlgorithm);
                                 Console.WriteLine($"Decoded Message: {message}");
                                 Console.WriteLine("Press any key to continue...");
-                                Console.ReadLine();
+                                Console.ReadKey();
                                 break;
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine(e);
+                                Console.WriteLine(e.Message);
+                                Console.ReadKey();
                                 break;
                             }
                             
