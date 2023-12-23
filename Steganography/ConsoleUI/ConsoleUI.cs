@@ -188,7 +188,7 @@ namespace Steganography.ConsoleUI
                             catch (Exception e)
                             {
                                 Console.WriteLine(e);
-                                throw;
+                                break;
                             }
                             
                         case EncodeMenuButtons.BackToMainMenu:
@@ -217,7 +217,7 @@ namespace Steganography.ConsoleUI
                             catch (Exception e)
                             {
                                 Console.WriteLine(e);
-                                throw;
+                                break;
                             }
                             
                         case DecodeMenuButtons.BackToMainMenu:
