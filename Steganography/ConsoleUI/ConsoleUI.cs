@@ -87,6 +87,7 @@ namespace Steganography.ConsoleUI
 
             Info selectingFileToEncodeInfo = null;
             var filesToEncode = encoder.GetImageFilesInDirectory();
+            filesToEncode.Add(EncodeAlgorithmsButtons.BackToMenu);
             ConsoleMenu selectingFileToEncodeMenu = new ConsoleMenu(
                 "Select File",
                 filesToEncode,
@@ -95,6 +96,7 @@ namespace Steganography.ConsoleUI
             
             Info selectingFileToDecodeInfo = null;
             var filesToDecode = decoder.GetImageFilesInDirectory();
+            filesToDecode.Add(EncodeAlgorithmsButtons.BackToMenu);
             ConsoleMenu selectingFileToDecodeMenu = new ConsoleMenu(
                 "Select File",
                 filesToDecode,
@@ -206,11 +208,13 @@ namespace Steganography.ConsoleUI
                     }
                     break;
                 case MenuStates.SelectFileToDecodeMenu:
+                    if (button == EncodeAlgorithmsButtons.BackToMenu) currentMenuStates = MenuStates.DecodeMenu;
                     _selectedFilePath = button;
                     FileChanged?.Invoke(_selectedFilePath);
                     currentMenuStates = MenuStates.DecodeMenu;
                     break;
                 case MenuStates.SelectFileToEncodeMenu:
+                    if (button == EncodeAlgorithmsButtons.BackToMenu) currentMenuStates = MenuStates.EncodeMenu;
                     _selectedFilePath = button;
                     FileChanged?.Invoke(_selectedFilePath);
                     currentMenuStates = MenuStates.EncodeMenu;
