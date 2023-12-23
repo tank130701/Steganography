@@ -1,6 +1,4 @@
-﻿using System.Drawing.Imaging;
-using System.Drawing;
-using Steganography.ConsoleUI;
+﻿using Steganography.ConsoleUI;
 using Steganography.Repository;
 using Steganography.Service.Decoder;
 using Steganography.Service.Encoder;
