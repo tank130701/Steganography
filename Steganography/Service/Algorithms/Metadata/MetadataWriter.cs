@@ -1,61 +1,42 @@
-﻿using System.Text;
-
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 namespace Steganography.Service.Algorithms.Metadata;
 
 internal static class MetadataWriter
 {
-    internal static byte[] WriteMessageToMetadata(byte[] byteArray, string message)
+    public static Image<Rgba32> HideMessageInImage(Image<Rgba32> image, string message)
     {
-        if (byteArray == null)
+        // Преобразование сообщения в байтовый массив
+        byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(message);
+    
+        // Проверка, достаточно ли места в метаданных изображения для записи сообщения
+        int maxMessageLength = image.Width * image.Height * 3 / 8;
+        if (messageBytes.Length > maxMessageLength)
         {
-            throw new ArgumentNullException(nameof(byteArray));
+            throw new Exception("Сообщение слишком длинное для данного изображения");
         }
 
-        if (string.IsNullOrEmpty(message))
+        // Запись сообщения в метаданные изображения
+        int messageIndex = 0;
+        for (int y = 0; y < image.Height; y++)
         {
-            throw new ArgumentException("Сообщение не может быть пустым.", nameof(message));
-        }
-
-        // Идентификаторы сегментов JPEG
-        const byte StartOfImageMarker = 0xFF;
-        const byte ApplicationSpecificMarker = 0xE1;
-
-        // Ищем сегмент приложения в изображении JPEG
-        int index = 2; // Пропускаем маркер начала изображения (SOI)
-        while (index < byteArray.Length - 1)
-        {
-            if (byteArray[index] == StartOfImageMarker && byteArray[index + 1] == ApplicationSpecificMarker)
+            for (int x = 0; x < image.Width; x++)
             {
-                // Найден сегмент приложения
-                break;
+                Rgba32 pixel = image[x, y];
+
+                // Запись битов сообщения в младшие биты компонент цвета пикселя
+                if (messageIndex < messageBytes.Length)
+                {
+                    byte messageByte = messageBytes[messageIndex];
+                    pixel.R = (byte)((pixel.R & 0xFE) | ((messageByte >> 7) & 0x01));
+                    pixel.G = (byte)((pixel.G & 0xFE) | ((messageByte >> 6) & 0x01));
+                    pixel.B = (byte)((pixel.B & 0xFE) | ((messageByte >> 5) & 0x01));
+                    messageIndex++;
+                }
+
+                image[x, y] = pixel;
             }
-            index++;
         }
-
-        if (index >= byteArray.Length - 1)
-        {
-            throw new InvalidOperationException("Изображение JPEG не содержит сегмента приложения.");
-        }
-
-        // Размер данных в сегменте приложения
-        int dataSize = (byteArray[index + 2] << 8) + byteArray[index + 3] - 2;
-
-        // Создаем новый массив байт для записи сообщения в метаданные
-        byte[] newData = new byte[byteArray.Length + message.Length];
-
-        // Копируем данные до сегмента приложения
-        Array.Copy(byteArray, 0, newData, 0, index + 4);
-
-        // Копируем данные после сегмента приложения
-        Array.Copy(byteArray, index + 4, newData, index + 4 + message.Length, byteArray.Length - index - 4);
-
-        // Записываем длину сообщения в два байта в сегмент приложения
-        newData[index + 2] = (byte)((message.Length + 2) >> 8);
-        newData[index + 3] = (byte)((message.Length + 2) & 0xFF);
-
-        // Записываем сообщение в сегмент приложения
-        Encoding.UTF8.GetBytes(message).CopyTo(newData, index + 4);
-
-        return newData;
+        return image;
     }
 }

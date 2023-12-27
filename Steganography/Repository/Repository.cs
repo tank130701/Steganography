@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace Steganography.Repository
 {
@@ -24,32 +24,29 @@ namespace Steganography.Repository
                 Console.WriteLine("Directory ImagesForEncoding has been created");
             }
         }
-
-        public Bitmap LoadImageToBitmap(string imagePath)
+        
+        public Image<Rgba32> LoadImageToRGB(string imageFolder, string imageName)
         {
+            var imagePath = "";
+            switch (imageFolder)
+            {
+                case "encode": imagePath = TextImagesForEncodingDirectory + imageName; break;
+                case "decode": imagePath = TextEncodedImagesDirectory + imageName; break;
+            }
             if (!File.Exists(imagePath))
             {
                 throw new FileNotFoundException("FileNotFound", imagePath);
             }
-
-            return new Bitmap(imagePath);
+            return Image.Load<Rgba32>(imagePath);
         }
 
-        public string SaveImageFromBitmap(Bitmap image)
+        public void SaveImageFromRGB(Image<Rgba32> image)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image), "Image cannot be null!");
-            }
-            
             Guid guid = Guid.NewGuid();
             var uuid = guid.ToString();
             var newImage = $"{uuid}.jpg";
             var newImagePath = TextEncodedImagesDirectory + newImage;
-            
-            image.Save(newImagePath, ImageFormat.Png);
-
-            return newImagePath;
+            image.Save(newImagePath, new JpegEncoder());
         }
 
         public byte[] LoadImageToBytes(string imageFolder, string imageName)

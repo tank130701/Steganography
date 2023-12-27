@@ -1,12 +1,12 @@
-using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Steganography.Repository
 {
     public interface IRepository
     {
-  
-        Bitmap LoadImageToBitmap(string imagePath);
-        string SaveImageFromBitmap(Bitmap image);
+        Image<Rgba32> LoadImageToRGB(string imageFolder, string imageName);
+        void SaveImageFromRGB(Image<Rgba32> image);
         byte[] LoadImageToBytes(string imageFolder, string imagePath);
         string SaveImageFromBytes(byte[] image);
         List<string> GetImageFilesInDirectory(string directoryPath);

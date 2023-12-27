@@ -1,6 +1,9 @@
 using Steganography.Repository;
 using Steganography.Service.Algorithms;
+using Steganography.Service.Algorithms.AlphaChannel;
 using Steganography.Service.Algorithms.EOF;
+using Steganography.Service.Algorithms.LSB;
+using Steganography.Service.Algorithms.Metadata;
 
 namespace Steganography.Service.Decoder
 {
@@ -8,6 +11,7 @@ namespace Steganography.Service.Decoder
     {
         public string DecodeMessage(string imagePath, string algorithm)
         {
+            var decodedMessgae = "";
             if (algorithm == "The encoding algorithm is not selected. Select an algorithm.")
             {
                 throw new Exception("The encoding algorithm is not selected. Select an algorithm.");
@@ -22,12 +26,28 @@ namespace Steganography.Service.Decoder
             {
                 case EncodeAlgorithms.Eof:
                     var image = repository.LoadImageToBytes("decode", imagePath);
-                    var decodedMessgae = EOFReader.ReadPastEOFMarker(image);
-                    if (decodedMessgae != null) return decodedMessgae;
+                    decodedMessgae = EOFReader.ReadPastEOFMarker(image);
+                    if (decodedMessgae != "") return decodedMessgae;
                     return "Image does not have a message";
+                case EncodeAlgorithms.Metadata:
+                    var rgbImage = repository.LoadImageToRGB("decode", imagePath);
+                    decodedMessgae = MetadataReader.ReadMessageFromImage(rgbImage);
+                    if (decodedMessgae != "") return decodedMessgae;
+                    return "Image does not have a message";
+                case EncodeAlgorithms.Lsb:
+                    image = repository.LoadImageToBytes("decode", imagePath);
+                    decodedMessgae = LsbReader.ReadMessage(image);
+                    if (decodedMessgae != "") return decodedMessgae;
+                    return "Image does not have a message";
+                case EncodeAlgorithms.AlphaChannel:
+                    image = repository.LoadImageToBytes("decode", imagePath);
+                    decodedMessgae = AlphaChannelReader.ReadMessage(image);
+                    if (decodedMessgae != "") return decodedMessgae;
+                    return "Image does not have a message";
+                default:
+                    throw new Exception("This Method is not Implemented.");
             }
-
-            return "";
+            
         }
         public List<string> GetImageFilesInDirectory() => repository.GetImageFilesInDirectory("EncodedImages");
     }

@@ -1,5 +1,6 @@
 ﻿using Steganography.Repository;
 using Steganography.Service.Algorithms;
+using Steganography.Service.Algorithms.AlphaChannel;
 
 namespace Steganography.Service.Encoder;
 
@@ -32,9 +33,19 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
                 repository.SaveImageFromBytes(_encodedImage);                
                 break;
             case EncodeAlgorithms.Metadata:
+                var rgbImage = repository.LoadImageToRGB("encode", imagePath);
+                var RGBEncodedImage = Algorithms.Metadata.MetadataWriter.HideMessageInImage(rgbImage, message);
+                repository.SaveImageFromRGB(RGBEncodedImage);
+                break;
+            case EncodeAlgorithms.Lsb:
                 _image = repository.LoadImageToBytes("encode", imagePath);
-                _encodedImage = Algorithms.Metadata.MetadataWriter.WriteMessageToMetadata(_image, message);
-                repository.SaveImageFromBytes(_encodedImage);
+                _encodedImage = Algorithms.LSB.LsbWriter.WriteMessage(_image, message);
+                repository.SaveImageFromBytes(_encodedImage);  
+                break;
+            case EncodeAlgorithms.AlphaChannel:
+                _image = repository.LoadImageToBytes("encode", imagePath);
+                _encodedImage = AlphaChannelWriter.WriteMessage(_image, message);
+                repository.SaveImageFromBytes(_encodedImage);  
                 break;
             default:
                 throw new Exception("This Method is not Implemented.");

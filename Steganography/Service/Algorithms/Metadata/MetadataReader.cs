@@ -1,42 +1,39 @@
-﻿using System.Text;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
 namespace Steganography.Service.Algorithms.Metadata;
 
-internal static class MetadataReader
+public static class MetadataReader
 {
-    internal static string ReadMessageFromMetadata(byte[] byteArray)
+    public static string ReadMessageFromImage(Image<Rgba32> image)
     {
-        if (byteArray == null)
         {
-            throw new ArgumentNullException(nameof(byteArray));
-        }
-
-        // Идентификаторы сегментов JPEG
-        const byte StartOfImageMarker = 0xFF;
-        const byte ApplicationSpecificMarker = 0xE1;
-
-        // Ищем сегмент приложения в изображении JPEG
-        int index = 2; // Пропускаем маркер начала изображения (SOI)
-        while (index < byteArray.Length - 1)
-        {
-            if (byteArray[index] == StartOfImageMarker && byteArray[index + 1] == ApplicationSpecificMarker)
+            // Чтение сообщения из метаданных изображения
+            byte[] messageBytes = new byte[image.Width * image.Height * 3 / 8];
+            int messageIndex = 0;
+            for (int y = 0; y < image.Height; y++)
             {
-                // Найден сегмент приложения
-                break;
+                for (int x = 0; x < image.Width; x++)
+                {
+                    Rgba32 pixel = image[x, y];
+
+                    // Чтение младших битов компонент цвета пикселя в байты сообщения
+                    if (messageIndex < messageBytes.Length)
+                    {
+                        byte messageByte = 0;
+                        messageByte |= (byte)((pixel.R & 0x01) << 7);
+                        messageByte |= (byte)((pixel.G & 0x01) << 6);
+                        messageByte |= (byte)((pixel.B & 0x01) << 5);
+                        messageBytes[messageIndex] = messageByte;
+                        messageIndex++;
+                    }
+                }
             }
-            index++;
+
+            // Преобразование байтов сообщения в строку
+            string message = System.Text.Encoding.UTF8.GetString(messageBytes);
+            return message;
         }
-
-        if (index >= byteArray.Length - 1)
-        {
-            throw new InvalidOperationException("Изображение JPEG не содержит сегмента приложения.");
-        }
-
-        // Размер данных в сегменте приложения
-        int dataSize = (byteArray[index + 2] << 8) + byteArray[index + 3] - 2;
-
-        // Извлекаем сообщение из сегмента приложения
-        string message = Encoding.UTF8.GetString(byteArray, index + 4, dataSize);
-
-        return message;
     }
 }
