@@ -10,7 +10,7 @@ public static class LsbWriter
         using (MemoryStream stream = new MemoryStream(byteArray))
         using (Image<Rgba32> image = Image.Load<Rgba32>(stream))
         {
-            byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message); // Используем UTF-8 для поддержки русских символов
 
             int bitCount = 0;
             int messageLength = messageBytes.Length * 8;
@@ -19,6 +19,11 @@ public static class LsbWriter
             {
                 for (int x = 0; x < image.Width; x++)
                 {
+                    if (bitCount >= messageLength)
+                    {
+                        break;
+                    }
+
                     Rgba32 pixel = image[x, y];
 
                     // Clear the least significant bit of each color channel

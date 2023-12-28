@@ -63,7 +63,7 @@ namespace Steganography.Service.Algorithms.LSB;
                         break;
                     }
                 }
-                return Encoding.ASCII.GetString(messageBytes);
+                return Encoding.UTF8.GetString(messageBytes);
             }
         }
         
