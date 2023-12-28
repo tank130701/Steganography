@@ -28,16 +28,17 @@ public static class AlphaChannelReader
 
             // Convert binary string to ASCII string
             string binaryMessage = message.ToString();
-            StringBuilder result = new StringBuilder();
-
+            List<byte> asciiMessage = new();
             for (int i = 0; i < binaryMessage.Length; i += 8)
             {
                 string binaryByte = binaryMessage.Substring(i, 8);
                 byte asciiByte = Convert.ToByte(binaryByte, 2);
-                result.Append((char)asciiByte);
+                if (asciiByte == 255)
+                    break;
+                asciiMessage.Add(asciiByte);
+                
             }
-
-            return result.ToString();
+            return Encoding.ASCII.GetString(asciiMessage.ToArray());
         }
     }
 }
