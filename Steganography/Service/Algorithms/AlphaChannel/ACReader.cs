@@ -34,6 +34,8 @@ public static class AlphaChannelReader
             {
                 string binaryByte = binaryMessage.Substring(i, 8);
                 byte asciiByte = Convert.ToByte(binaryByte, 2);
+                if (asciiByte == 255)
+                    break;
                 result.Append((char)asciiByte);
             }
 
