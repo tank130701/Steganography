@@ -1,18 +1,26 @@
 ﻿namespace Steganography.ConsoleUI;
 
-public class ConsoleMenu(string title, List<string> options, Info info)
+public class FilesMenu
 {
-    string Title { get; } = title;
+    public FilesMenu(string title, List<string> files)
+    {
+        Title = title;
+        Files = files;
+        Buttons.Add(EncodeAlgorithmsButtons.BackToMenu);
+    }
+
+    string Title { get; }
     int SelectedIndex { get; set; } = 0;
-    List<string> Options { get; } = options;
-    private Info Info { get; } = info;
+    private List<string> Files { get; set; }
+    List<string> Buttons { get; } = new();
+    
     void DisplayOptions()
         {
             Console.WriteLine(Title);
 
-            for (int i = 0; i < Options.Count; i++)
+            for (int i = 0; i < Buttons.Count; i++)
             {
-                string currentOption = Options[i];
+                string currentOption = Buttons[i];
                 string prefix;
 
                 if(i == SelectedIndex)
@@ -36,10 +44,16 @@ public class ConsoleMenu(string title, List<string> options, Info info)
         public string DisplayMenu()
         {
             ConsoleKey keyPressed;
+            foreach (var item in Files)
+            {
+                if (!Buttons.Contains(item))
+                {
+                    Buttons.Add(item);
+                }
+            }
             do
             {
                 Console.Clear();
-                if (Info != null) Info.DisplayInfo();
                 DisplayOptions();
 
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -48,7 +62,7 @@ public class ConsoleMenu(string title, List<string> options, Info info)
                 if(keyPressed == ConsoleKey.DownArrow)
                 {
                     SelectedIndex++;
-                    if(SelectedIndex >= Options.Count)
+                    if(SelectedIndex >= Buttons.Count)
                     {
                         SelectedIndex = 0;
                     }
@@ -57,11 +71,16 @@ public class ConsoleMenu(string title, List<string> options, Info info)
                     SelectedIndex--;
                     if(SelectedIndex < 0)
                     {
-                        SelectedIndex = Options.Count-1;
+                        SelectedIndex = Buttons.Count-1;
                     }
                 }
             } while(keyPressed!=ConsoleKey.Enter);
 
-            return Options[SelectedIndex];
+            return Buttons[SelectedIndex];
+        }
+        
+        public void DirectoryListUpdated(List<string> files)
+        {
+            Files = files;
         }
 }
