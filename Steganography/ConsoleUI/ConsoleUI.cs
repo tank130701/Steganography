@@ -13,9 +13,12 @@ namespace Steganography.ConsoleUI
         public delegate void ChangeAlgorithm(string newText);
         public delegate void ChangeMessage(string newText);
         public delegate void ChangeFile(string newText);
+        public delegate void UpdateFilesList(List<string> files);
         public event ChangeAlgorithm? AlgorithmChanged;
         public event ChangeMessage? MessageChanged;
         public event ChangeFile? FileChanged;
+
+        public event UpdateFilesList? DirectoryListUpdated;
 
         private MenuStates ChangeEncodeAlgorithm(string algorithm)
         {
@@ -84,29 +87,25 @@ namespace Steganography.ConsoleUI
                     EncodeAlgorithmsButtons.Eof,
                     EncodeAlgorithmsButtons.BackToMenu
                 },algorithmsMenuInfo);
-
-            Info selectingFileToEncodeInfo = null;
+            
             var filesToEncode = encoder.GetImageFilesInDirectory();
-            filesToEncode.Add(EncodeAlgorithmsButtons.BackToMenu);
-            ConsoleMenu selectingFileToEncodeMenu = new ConsoleMenu(
+            FilesMenu encodeFileMenu = new FilesMenu(
                 "Select File",
-                filesToEncode,
-                selectingFileToEncodeInfo
+                filesToEncode
                 );
             
-            Info selectingFileToDecodeInfo = null;
             var filesToDecode = decoder.GetImageFilesInDirectory();
-            filesToDecode.Add(EncodeAlgorithmsButtons.BackToMenu);
-            ConsoleMenu selectingFileToDecodeMenu = new ConsoleMenu(
+            FilesMenu decodeFileMenu = new FilesMenu(
                 "Select File",
-                filesToDecode,
-                selectingFileToDecodeInfo
+                filesToDecode
             );
             
             AlgorithmChanged += encodeInfo.IsAlgorithmChanged;
             AlgorithmChanged += decodeInfo.IsAlgorithmChanged;
             MessageChanged += encodeInfo.IsMessageChanged;
             FileChanged += encodeInfo.IsFileChanged;
+            DirectoryListUpdated += encodeFileMenu.DirectoryListUpdated;
+            DirectoryListUpdated += decodeFileMenu.DirectoryListUpdated;
             
             MenuStates menuStates = MenuStates.MainMenu;
             string button = "";
@@ -130,10 +129,10 @@ namespace Steganography.ConsoleUI
                         button = algorithmsMenu.DisplayMenu();
                         break;
                     case MenuStates.SelectFileToEncodeMenu:
-                        button = selectingFileToEncodeMenu.DisplayMenu();
+                        button = encodeFileMenu.DisplayMenu();
                         break;
                     case MenuStates.SelectFileToDecodeMenu:
-                        button = selectingFileToDecodeMenu.DisplayMenu();
+                        button = decodeFileMenu.DisplayMenu();
                         break;
                 }
                 HandleInput(button, ref menuStates);
@@ -162,6 +161,8 @@ namespace Steganography.ConsoleUI
                     switch (button)
                     {
                         case EncodeMenuButtons.SelectImage:
+                            var filesToEncode = encoder.GetImageFilesInDirectory();
+                            DirectoryListUpdated?.Invoke(filesToEncode);
                             currentMenuStates = MenuStates.SelectFileToEncodeMenu;
                             break;
                         case EncodeMenuButtons.SelectAlgorithm:
@@ -201,6 +202,8 @@ namespace Steganography.ConsoleUI
                     switch (button)
                     {
                         case DecodeMenuButtons.SelectImage: 
+                            var filesToDecode = decoder.GetImageFilesInDirectory();
+                            DirectoryListUpdated?.Invoke(filesToDecode);
                             currentMenuStates = MenuStates.SelectFileToDecodeMenu;
                             break;
                         case DecodeMenuButtons.SelectAlgorithm:
