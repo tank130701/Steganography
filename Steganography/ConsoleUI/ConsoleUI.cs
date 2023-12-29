@@ -48,7 +48,8 @@ namespace Steganography.ConsoleUI
             var encodeInfo = new Info(
                 _selectedAlgorithm,
                 _selectedFilePath,
-                _messageToEncode
+                _messageToEncode,
+                true
                 );
             ConsoleMenu encodeMenu = new ConsoleMenu( $"Select Option",
                 new List<string>
@@ -63,7 +64,8 @@ namespace Steganography.ConsoleUI
             var decodeInfo = new Info(
                 _selectedAlgorithm,
                 _selectedFilePath,
-                _messageToEncode
+                _messageToEncode,
+                false
                 );
             ConsoleMenu decodeMenu = new ConsoleMenu("Select Option",
                 new List<string>
@@ -214,6 +216,8 @@ namespace Steganography.ConsoleUI
                             try
                             {
                                 var message = decoder.DecodeMessage(_selectedFilePath, _selectedAlgorithm);
+                                _messageToEncode = message;
+                                MessageChanged?.Invoke(_messageToEncode);
                                 Console.WriteLine($"Decoded Message: {message}");
                                 Console.WriteLine("Press any key to continue...");
                                 Console.ReadKey();

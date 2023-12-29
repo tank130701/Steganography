@@ -1,14 +1,18 @@
-﻿namespace Steganography.ConsoleUI;
+﻿using System.ComponentModel.Design.Serialization;
 
-public class Info(string selectedAlgorithm, string selectedFilePath, string messageToEncode)
+namespace Steganography.ConsoleUI;
+
+public class Info(string selectedAlgorithm, string selectedFilePath, string messageToEncode, bool infoFlag)
 {
     private string SelectedAlgorithm { get; set; } = selectedAlgorithm;
     private string SelectedFilePath { get; set; } = selectedFilePath;
     private string MessageToEncode { get; set; } = messageToEncode;
 
+    // infoFlag: encode = true, decode = false 
+
     public void DisplayInfo()
     {
-        Console.WriteLine($"Message to Encode: {MessageToEncode}");
+        Console.WriteLine(infoFlag ? $"Message to Encode: {MessageToEncode}" : $"Decoded Message: {MessageToEncode}");
         Console.WriteLine($"Selected Algorithm: {SelectedAlgorithm}");
         Console.WriteLine($"Selected FilePath: {SelectedFilePath}");
     }
