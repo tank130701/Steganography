@@ -104,6 +104,7 @@ namespace Steganography.ConsoleUI
             AlgorithmChanged += decodeInfo.IsAlgorithmChanged;
             MessageChanged += encodeInfo.IsMessageChanged;
             FileChanged += encodeInfo.IsFileChanged;
+            FileChanged += decodeInfo.IsFileChanged;
             DirectoryListUpdated += encodeFileMenu.DirectoryListUpdated;
             DirectoryListUpdated += decodeFileMenu.DirectoryListUpdated;
             
