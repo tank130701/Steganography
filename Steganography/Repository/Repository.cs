@@ -69,7 +69,7 @@ namespace Steganography.Repository
             return fileBytes;
         }
 
-        public string SaveImageFromBytes(byte[] image)
+        public string SaveImageFromBytes(byte[] image, string imageType)
         {
                 if (image == null || image.Length == 0)
                 {
@@ -78,7 +78,7 @@ namespace Steganography.Repository
                 
                 Guid guid = Guid.NewGuid();
                 var uuid = guid.ToString();
-                var newImage = $"{uuid}.jpg";
+                var newImage = $"{uuid}.{imageType}";
                 var newImagePath = TextEncodedImagesDirectory + newImage;
                 
                 using (FileStream fs = new FileStream(newImagePath, FileMode.Create, FileAccess.Write))
