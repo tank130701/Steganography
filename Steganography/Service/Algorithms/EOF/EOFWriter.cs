@@ -4,7 +4,7 @@ using Steganography.Service.Utils.Enums;
 
 namespace Steganography.Service.Algorithms.EOF;
 
-public static class EOFWriter
+internal static class EOFWriter
 {
     /// <summary>
     /// Writes the message bytes after the JPEG's end of file marker.
@@ -15,7 +15,7 @@ public static class EOFWriter
     /// <param name="byteArray"></param>
     /// <param name="message"></param>
     /// <returns>Modified byte array representing the modified image </returns>
-    public static byte[] WritePastEOFMarker(byte[] byteArray, string message)
+    internal static byte[] WritePastEOFMarker(byte[] byteArray, string message)
     {
         byte[] messageBytes = Encoding.ASCII.GetBytes(message);
 

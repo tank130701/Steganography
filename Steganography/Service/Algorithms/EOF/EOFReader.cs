@@ -4,7 +4,7 @@ using Steganography.Service.Utils.Enums;
 
 namespace Steganography.Service.Algorithms.EOF;
 
-public static class EOFReader
+internal static class EOFReader
 {
     /// <summary>
     /// Reads message bytes after the JPEG's end of file marker.
@@ -15,7 +15,7 @@ public static class EOFReader
     /// <param name="byteArray"></param>
     /// <param name="message"></param>
     /// <returns>Message string past the EOF marker</returns>
-    public static string? ReadPastEOFMarker(byte[] byteArray)
+    internal static string? ReadPastEOFMarker(byte[] byteArray)
     {
         int? EOFIndex = SequenceLocator.LocateSequence(byteArray, new byte[] {(byte)JpegMarker.Padding, (byte)JpegMarker.EndOfImage}) ?? throw new Exception("Broken JPEG: Couldn't find EOF marker");
         

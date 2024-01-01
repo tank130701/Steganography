@@ -6,7 +6,7 @@ namespace Steganography.Service.Algorithms.Metadata;
 
 internal static class MetadataWriter
 {
-    public static Image<Rgba32> HideMessageInImage(Image<Rgba32> image, string message)
+    internal static Image<Rgba32> HideMessageInImage(Image<Rgba32> image, string message)
     {
         // Конвертируем сообщение в байты
         byte[] messageBytes = Encoding.UTF8.GetBytes(message);

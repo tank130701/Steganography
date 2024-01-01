@@ -3,9 +3,9 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 namespace Steganography.Service.Algorithms.AlphaChannel;
 
-public class AlphaChannelWriter
+internal class AlphaChannelWriter
 {
-    public static byte[] WriteMessage(byte[] byteArray, string message)
+    internal static byte[] WriteMessage(byte[] byteArray, string message)
     {
         using (MemoryStream stream = new MemoryStream(byteArray))
         using (Image<Rgba32> image = Image.Load<Rgba32>(stream))

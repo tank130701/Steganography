@@ -3,9 +3,9 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 namespace Steganography.Service.Algorithms.LSB;
 
-public static class LsbWriter
+internal static class LsbWriter
 {
-    public static Image<Rgba32> WriteMessage(Image<Rgba32> image, string message)
+    internal static Image<Rgba32> WriteMessage(Image<Rgba32> image, string message)
     {
         byte[] messageBytes = Encoding.UTF8.GetBytes(message); 
         byte[] lengthBytes = BitConverter.GetBytes(messageBytes.Length);
