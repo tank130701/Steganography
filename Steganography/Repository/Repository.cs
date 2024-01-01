@@ -40,13 +40,13 @@ namespace Steganography.Repository
             return Image.Load<Rgba32>(imagePath);
         }
 
-        public void SaveImageFromRGB(Image<Rgba32> image)
+        public void SaveImageFromRGB(Image<Rgba32> image, string imageType)
         {
             Guid guid = Guid.NewGuid();
             var uuid = guid.ToString();
-            var newImage = $"{uuid}.jpg";
+            var newImage = $"{uuid}.{imageType}";
             var newImagePath = TextEncodedImagesDirectory + newImage;
-            image.Save(newImagePath, new JpegEncoder());
+            image.Save(newImagePath);
         }
 
         public byte[] LoadImageToBytes(string imageFolder, string imageName)

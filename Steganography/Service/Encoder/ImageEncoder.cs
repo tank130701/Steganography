@@ -35,12 +35,12 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
             case EncodeAlgorithms.Metadata:
                 var rgbImage = repository.LoadImageToRGB("encode", imagePath);
                 var RGBEncodedImage = Algorithms.Metadata.MetadataWriter.HideMessageInImage(rgbImage, message);
-                repository.SaveImageFromRGB(RGBEncodedImage);
+                repository.SaveImageFromRGB(RGBEncodedImage, "png");
                 break;
             case EncodeAlgorithms.Lsb:
-                _image = repository.LoadImageToBytes("encode", imagePath);
-                _encodedImage = Algorithms.LSB.LsbWriter.WriteMessage(_image, message);
-                repository.SaveImageFromBytes(_encodedImage);  
+                rgbImage = repository.LoadImageToRGB("encode", imagePath);
+                var rgbEncodedImage = Algorithms.LSB.LsbWriter.WriteMessage(rgbImage, message);
+                repository.SaveImageFromRGB(rgbEncodedImage, "png");  
                 break;
             case EncodeAlgorithms.AlphaChannel:
                 _image = repository.LoadImageToBytes("encode", imagePath);

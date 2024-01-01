@@ -28,7 +28,7 @@
 
     internal static class EncodeAlgorithmsButtons
     {
-        public const string Lsb = "Least Significant Bit (LSB)";
+        public const string Lsb = "Least Significant Bit (LSB) (PNG only)";
         public const string AlphaChannel = "Embedding into the alpha channel (Alhpa Channel)";
         public const string Metadata = "Embedding in metadata (Metadata)";
         public const string Palette = "Using color palettes (Palette)";
