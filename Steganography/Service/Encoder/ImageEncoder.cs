@@ -45,6 +45,7 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
         switch (algorithm)
         {
             case EncodeAlgorithms.Eof:
+                if (extension == "png") throw new Exception("Unsupported image format.");
                 _image = repository.LoadImageToBytes("encode", imagePath);
                 _encodedImage = Algorithms.EOF.EOFWriter.WritePastEOFMarker(_image, message);
                 repository.SaveImageFromBytes(_encodedImage, extension);                
