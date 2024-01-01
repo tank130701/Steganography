@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Steganography.Service.Algorithms.Metadata;
 
-public static class MetadataReader
+internal static class MetadataReader
 {
-    public static string ReadMessageFromImage(Image<Rgba32> image)
+    internal static string ReadMessageFromImage(Image<Rgba32> image)
     {
         // Получаем ExifProfile изображения
         ExifProfile profile = image.Metadata.ExifProfile;

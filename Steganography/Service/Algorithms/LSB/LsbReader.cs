@@ -3,9 +3,9 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 namespace Steganography.Service.Algorithms.LSB;
 
- public static class LsbReader
+internal static class LsbReader
 {
-    public static string ReadMessage(Image<Rgba32> image)
+    internal static string ReadMessage(Image<Rgba32> image)
     {
         int messageLength = 0;
         for (int i = 0; i < 32; i++)

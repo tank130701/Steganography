@@ -5,9 +5,9 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 namespace Steganography.Service.Algorithms.AlphaChannel;
 
-public static class AlphaChannelReader
+internal static class AlphaChannelReader
 {
-    public static string ReadMessage(byte[] byteArray)
+    internal static string ReadMessage(byte[] byteArray)
     {
         using (MemoryStream stream = new MemoryStream(byteArray))
         using (Image<Rgba32> image = Image.Load<Rgba32>(stream))
