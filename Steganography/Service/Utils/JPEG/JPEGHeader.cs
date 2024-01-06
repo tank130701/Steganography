@@ -1,4 +1,4 @@
-﻿namespace Steganography.Service.Utils;
+﻿namespace Steganography.Service.Utils.JPEG;
 
 public struct JPEGHeader
 {
@@ -11,6 +11,5 @@ public struct JPEGHeader
     public int height;
     public byte componentCount;
     bool valid = false;
-
     public JPEGHeader(){}
 }

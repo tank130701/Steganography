@@ -1,4 +1,4 @@
-﻿namespace Steganography.Service.Utils;
+﻿namespace Steganography.Service.Utils.JPEG;
 
 public struct ColorComponent
 {
