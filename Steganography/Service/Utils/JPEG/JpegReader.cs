@@ -7,6 +7,16 @@ public class JpegReader
 {
     readonly byte[] _data;
     JPEGHeader _header;
+
+    /// <summary>
+    /// Checks if the first 2 bytes are a start of image marker
+    /// </summary>
+    /// <returns></returns>
+    public bool ContainsValidStartOfImage()
+    {
+        if(FindJPEGMarker(JpegMarker.StartOfImage).Item1!=0) return false;
+        return true;
+    }
     /// <summary>
     /// Checks if a marker might be present after given index
     /// </summary>
@@ -27,7 +37,8 @@ public class JpegReader
     /// <returns>JPEG Marker enum, null if no marker is present</returns>
     JpegMarker? TryReadMarker(uint index)
     {
-        if(TryPeekMarker(index)) return null;
+        if(TryPeekMarker(index)==false) return null;
+        // Possible failure point
         return (JpegMarker)_data[index+1];
     }
 
@@ -71,5 +82,4 @@ public class JpegReader
         }
         return returnVal;
     }
-
 }
