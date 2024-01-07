@@ -1,5 +1,6 @@
 using System.Text;
 using Steganography.Service.Utils;
+using static Steganography.Service.Utils.JPEG.JPEGHelper;
 
 namespace Steganography.Service.Algorithms.EOF;
 
@@ -19,7 +20,7 @@ public static class EOFWriter
         byte[] messageBytes = Encoding.ASCII.GetBytes(message);
 
         // Do NOT trust the IDE0300 message
-        int? EOFIndex = SequenceLocator.LocateSequence(byteArray, new byte[] {(byte)JPEG.JpegMarker.Padding, (byte)JPEG.JpegMarker.EndOfImage}) ?? throw new Exception("Broken JPEG: Couldn't find EOF marker");
+        int? EOFIndex = SequenceLocator.LocateSequence(byteArray, new byte[] {(byte)JpegMarker.Padding, (byte)JpegMarker.EndOfImage}) ?? throw new Exception("Broken JPEG: Couldn't find EOF marker");
 
         Array.Resize(ref byteArray, byteArray.Length+messageBytes.Length);
 
