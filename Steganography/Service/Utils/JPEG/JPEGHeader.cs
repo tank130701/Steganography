@@ -2,8 +2,8 @@
 
 public struct JPEGHeader
 {
-    public HuffmanTable[]? HuffmanDCTable;
-    public HuffmanTable[]? HuffmanACTable;
+    public HuffmanTable[]? huffmanDCTable;
+    public HuffmanTable[]? huffmanACTable;
     public ColorComponent[]? colorComponents;
     public uint restartInterval = 0;
     public byte frameType;
