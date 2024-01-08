@@ -43,7 +43,30 @@ public class JpegReader
 
     public void ReadHuffmanTables()
     {
+        var DHT = FindJPEGMarker(JpegMarker.DefineHuffmanTable);
+        if(DHT.Item1 == null || DHT.Item2 == null) throw new Exception("Could not find DHT marker");
+        int currentIndex = (int)DHT.Item1+4;
+        int DHTDataLength = GetSectionLength((int)DHT.Item1);
+        while(DHTDataLength>0)
+        {
+            var (upperNibble, lowerNibble) = _data[currentIndex].SplitIntoNibbles();
+            bool isACTable = upperNibble == 1? true : false;
+            var table = new HuffmanTable(lowerNibble);
 
+            // TODO Read and set data
+
+
+
+            if(isACTable)
+            {
+                _header.huffmanACTables[lowerNibble] = table;
+            }else
+            {
+                _header.huffmanDCTables[lowerNibble] = table;
+            }
+            // TODO Decrease by actual number of bytes read, not by 1
+            DHTDataLength-=1;
+        }
     }
 
     /// <summary>
@@ -66,7 +89,7 @@ public class JpegReader
     /// </summary>
     /// <param name="supportedFrameTypes"></param>
     /// <exception cref="Exception"></exception>
-    public void ProcessSOFData(List<JpegMarker> supportedFrameTypes)
+    public void ReadSOFData(List<JpegMarker> supportedFrameTypes)
     {
         var SOF = FindSOFMarker();
         if(SOF.Item1==null) throw new Exception("Could not find Start Of Frame marker");
