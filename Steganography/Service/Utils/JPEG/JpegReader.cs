@@ -41,6 +41,11 @@ public class JpegReader
         return (JpegMarker)_data[index+1];
     }
 
+    /// <summary>
+    /// Tries to read huffman tables and populate related JPEG header fields
+    /// TODO METHOD TO DISPLAY TABLES FOR TESTING
+    /// </summary>
+    /// <exception cref="Exception"></exception>
     public void ReadHuffmanTables()
     {
         var DHT = FindJPEGMarker(JpegMarker.DefineHuffmanTable);
@@ -53,9 +58,34 @@ public class JpegReader
             bool isACTable = upperNibble == 1? true : false;
             var table = new HuffmanTable(lowerNibble);
 
+            ++currentIndex;
+
             // TODO Read and set data
+            
+            int symbolCount = 0;
+            table._offsets[0] = symbolCount;
+            
+            // Populate offsets array. Offset array is used to calculate the amount of huffman codes of given length
+            // Where index of offset array is the huffman code length, and the value at that index
+            // Is the total count of huffman codes before (and including? Double check, im bad with data structures)
+            // TODO MAKE SURE YOU ACCOUNT FOR THE LAST ELEMENT IN THE OFFSET ARRAY, IT HAS TO BE A DUMMY ONE SO WE CAN GET
+            // THE CORRECT COUNT FOR 16 BIT LONG HUFFMAN CODES
+            // I fucking smell an error here with the indexes
+            for(int i = 1; i<=16; i++)
+            {
+                symbolCount += _data[currentIndex+i];
+                table._offsets[i] = symbolCount;
+                currentIndex++;
+            }
 
+            if(symbolCount>162) throw new Exception($"Too many symbols in Huffman table with id {lowerNibble}");
 
+            // Read actual huffman symbols and populate huffman table's symbol array
+            for (int i = 0; i < symbolCount; i++)
+            {
+                table._symbols[i] = _data[currentIndex+i];
+                currentIndex++;
+            }
 
             if(isACTable)
             {
@@ -65,7 +95,8 @@ public class JpegReader
                 _header.huffmanDCTables[lowerNibble] = table;
             }
             // TODO Decrease by actual number of bytes read, not by 1
-            DHTDataLength-=1;
+            // This should be correct
+            DHTDataLength -= 17+symbolCount;
         }
     }
 
