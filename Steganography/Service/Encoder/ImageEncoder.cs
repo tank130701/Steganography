@@ -8,7 +8,7 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
 {
     private byte[] _image;
     private byte[] _encodedImage;
-    public void EncodeMessage(string imagePath, string message, string algorithm)
+    public string EncodeMessage(string imagePath, string message, string algorithm)
     {
         if (message is "The message is empty. Write a message." or "")
         {
@@ -48,25 +48,21 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
                 if (extension == "png") throw new Exception("Unsupported image format.");
                 _image = repository.LoadImageToBytes("encode", imagePath);
                 _encodedImage = Algorithms.EOF.EOFWriter.WritePastEOFMarker(_image, message);
-                repository.SaveImageFromBytes(_encodedImage, extension);                
-                break;
+                return repository.SaveImageFromBytes(_encodedImage, extension);                
             case EncodeAlgorithms.Metadata:
                 var rgbImage = repository.LoadImageToRGB("encode", imagePath);
                 var RGBEncodedImage = Algorithms.Metadata.MetadataWriter.HideMessageInImage(rgbImage, message);
-                repository.SaveImageFromRGB(RGBEncodedImage, extension);
-                break;
+                return repository.SaveImageFromRGB(RGBEncodedImage, extension);
             case EncodeAlgorithms.Lsb:
                 if (extension != "png") throw new Exception("Unsupported image format.");
                 rgbImage = repository.LoadImageToRGB("encode", imagePath);
                 var rgbEncodedImage = Algorithms.LSB.LsbWriter.WriteMessage(rgbImage, message);
-                repository.SaveImageFromRGB(rgbEncodedImage, extension);  
-                break;
+                return repository.SaveImageFromRGB(rgbEncodedImage, extension);  
             case EncodeAlgorithms.AlphaChannel:
                 if (extension == "png") throw new Exception("Unsupported image format.");
                 _image = repository.LoadImageToBytes("encode", imagePath);
                 _encodedImage = AlphaChannelWriter.WriteMessage(_image, message);
-                repository.SaveImageFromBytes(_encodedImage, extension);  
-                break;
+                return repository.SaveImageFromBytes(_encodedImage, extension);  
             default:
                 throw new Exception("This Method is not Implemented.");
         }

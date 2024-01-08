@@ -183,8 +183,9 @@ namespace Steganography.ConsoleUI
                         case EncodeMenuButtons.EncodeMessage:
                             try
                             {
-                                encoder.EncodeMessage(_selectedFilePath, _messageToEncode, _selectedAlgorithm);
+                                var img = encoder.EncodeMessage(_selectedFilePath, _messageToEncode, _selectedAlgorithm);
                                 Console.WriteLine("The message was successfully encoded");
+                                Console.WriteLine("Image saved as " + img);
                                 Console.WriteLine("Press any key to continue...");
                                 Console.ReadKey();
                                 break;
