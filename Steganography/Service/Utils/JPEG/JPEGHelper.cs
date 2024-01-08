@@ -1,6 +1,6 @@
-﻿namespace Steganography.Service.Utils;
+﻿namespace Steganography.Service.Utils.JPEG;
 
-public class JPEG
+public static class JPEGHelper
 {
     public enum JpegMarker : byte
     {
