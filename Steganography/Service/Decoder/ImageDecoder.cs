@@ -40,8 +40,8 @@ namespace Steganography.Service.Decoder
                     if (decodedMessgae != "") return decodedMessgae;
                     return "Image does not have a message";
                 case EncodeAlgorithms.AlphaChannel:
-                    image = repository.LoadImageToBytes("decode", imagePath);
-                    decodedMessgae = AlphaChannelReader.ReadMessage(image);
+                    rgbImage = repository.LoadImageToRGB("decode", imagePath);
+                    decodedMessgae = AlphaChannelReader.ReadMessage(rgbImage);
                     if (decodedMessgae != "") return decodedMessgae;
                     return "Image does not have a message";
                 default:

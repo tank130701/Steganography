@@ -60,8 +60,8 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
                 return repository.SaveImageFromRGB(rgbEncodedImage, extension);  
             case EncodeAlgorithms.AlphaChannel:
                 if (extension == "png") throw new Exception("Unsupported image format.");
-                _image = repository.LoadImageToBytes("encode", imagePath);
-                _encodedImage = AlphaChannelWriter.WriteMessage(_image, message);
+                rgbImage = repository.LoadImageToRGB("encode", imagePath);
+                _encodedImage = AlphaChannelWriter.WriteMessage(rgbImage, message);
                 return repository.SaveImageFromBytes(_encodedImage, extension);  
             default:
                 throw new Exception("This Method is not Implemented.");
