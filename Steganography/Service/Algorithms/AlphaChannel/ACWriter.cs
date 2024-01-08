@@ -3,7 +3,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 namespace Steganography.Service.Algorithms.AlphaChannel;
 
-internal class AlphaChannelWriter
+internal static class AlphaChannelWriter
 {
     internal static byte[] WriteMessage(Image<Rgba32> image, string message)
     {
