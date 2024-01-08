@@ -1,5 +1,4 @@
 ﻿using System.Buffers.Binary;
-using Microsoft.VisualBasic;
 using static Steganography.Service.Utils.JPEG.JPEGHelper;
 
 namespace Steganography.Service.Utils.JPEG;
@@ -8,7 +7,7 @@ public class JpegReader
 {
     readonly byte[] _data;
     JPEGHeader _header;
-
+    List<int> _supportedComponentCount = [1,3];
     /// <summary>
     /// Checks if the first 2 bytes are a start of image marker
     /// </summary>
@@ -30,7 +29,6 @@ public class JpegReader
         if(_data[index+1]==(byte)0x00) return false;
         return true;
     }
-
     /// <summary>
     /// Tries to read a JPEG marker after a given index
     /// </summary>
@@ -48,6 +46,26 @@ public class JpegReader
 
     }
 
+    /// <summary>
+    /// Tries to read DRI marker and fill header data accordingly
+    /// </summary>
+    /// <exception cref="Exception"></exception>
+    public void ReadRestartInterval()
+    {
+        var (index, marker) = FindJPEGMarker(JpegMarker.DefineRestartInterval);
+        if(index==null) throw new Exception("Restart interval not defined");
+        int length = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(_data,(int)index+2));
+        if(length!=4) throw new Exception($"Invalid DRI section length, expected: 4, found: {length}");
+        index+=2;
+        int restartInterval = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(_data,(int)index));
+        // TODO error checking, in case there is a max restart interval.
+        _header.restartInterval = restartInterval;
+    }
+    /// <summary>
+    /// Finds and reads start of frame marker, and tries to read related data from its section
+    /// </summary>
+    /// <param name="supportedFrameTypes"></param>
+    /// <exception cref="Exception"></exception>
     public void ProcessSOFData(List<JpegMarker> supportedFrameTypes)
     {
         var SOF = FindSOFMarker();
@@ -65,11 +83,26 @@ public class JpegReader
         _header.width = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(_data, currentIndex+3));
         _header.componentCount = _data[currentIndex+5];
 
+        if(!_supportedComponentCount.Contains(_header.componentCount)) throw new Exception("Unsupported amount of colour channels");
+
         currentIndex+=6;
 
+        // Initialise color component objects
         for(int i = 0; i<_header.componentCount; i++)
         {
-            // TODO Create color component object
+            int componentID = _data[currentIndex];
+            // Color components can sometimes be zero based, but i won't allow that
+            if(componentID<=0 || componentID>3) throw new Exception($"Invalid component ID: {componentID}");
+            currentIndex+=1;
+            var (upperNibble, lowerNibble) = _data[currentIndex].SplitIntoNibbles();
+            byte horizontalSamplingFactor = upperNibble;
+            byte verticalSamplingFactor = lowerNibble;
+            if(horizontalSamplingFactor != 1 || verticalSamplingFactor!=1) throw new Exception("Unsupported sampling factor, must be 1");
+            currentIndex+=1;
+            byte quantizationTableID = _data[currentIndex];
+            _header.colorComponents[i] = new(i+1,quantizationTableID);
+            if(sofDataLength - 5 - (3*_header.componentCount)!=0) throw new Exception("SOF Section length did not match with actual section length");
+            currentIndex+=1;
         }
 
     }
