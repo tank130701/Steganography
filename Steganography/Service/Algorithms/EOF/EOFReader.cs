@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Steganography.Service.Utils;
+using static Steganography.Service.Utils.JPEG.JPEGHelper;
 
 namespace Steganography.Service.Algorithms.EOF;
 
@@ -16,7 +17,7 @@ internal static class EOFReader
     /// <returns>Message string past the EOF marker</returns>
     internal static string? ReadPastEOFMarker(byte[] byteArray)
     {
-        int? EOFIndex = SequenceLocator.LocateSequence(byteArray, new byte[] {(byte)JPEG.JpegMarker.Padding, (byte)JPEG.JpegMarker.EndOfImage}) ?? throw new Exception("Broken JPEG: Couldn't find EOF marker");
+        int? EOFIndex = SequenceLocator.LocateSequence(byteArray, [(byte)JpegMarker.Padding, (byte)JpegMarker.EndOfImage]) ?? throw new Exception("Broken JPEG: Couldn't find EOF marker");
         
         int messageLengthInBytes = byteArray.Length - (int)EOFIndex - 2;
 
