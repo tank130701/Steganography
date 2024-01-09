@@ -54,10 +54,13 @@ public class JpegReader
         // TODO use this, maybe make a hash map or something
         // Relation between colour components and Huffman table IDs used for each component with 
         // The ID you read
+        // DONE, NO HASH MAPS
         for(int i = 0; i<numberOfComponents; i++)
         {
             int componentID = _data[currentIndex++];
             var (tableType, tableID) = _data[currentIndex++].SplitIntoNibbles();
+            var colorComponent = _header.GetColorComponentByID(componentID);
+            colorComponent.SetHuffmanTable(tableType,_header.GetHuffmanTableByID(tableType,tableID));
         }
         int startOfSelection = _data[currentIndex++];
         int endOfSelection = _data[currentIndex++];
@@ -124,10 +127,10 @@ public class JpegReader
 
             if(isACTable)
             {
-                _header.huffmanACTables[lowerNibble] = table;
+                _header._huffmanACTables[lowerNibble] = table;
             }else
             {
-                _header.huffmanDCTables[lowerNibble] = table;
+                _header._huffmanDCTables[lowerNibble] = table;
             }
             // TODO Decrease by actual number of bytes read, not by 1
             // This should be correct
@@ -148,7 +151,7 @@ public class JpegReader
         index+=2;
         int restartInterval = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(_data,(int)index));
         // TODO error checking, in case there is a max restart interval.
-        _header.restartInterval = restartInterval;
+        _header._restartInterval = restartInterval;
     }
     /// <summary>
     /// Finds and reads start of frame marker, and tries to read related data from its section
@@ -168,16 +171,16 @@ public class JpegReader
         // Checked with BitConverter.IsLittleEndian
         if(!(_data[currentIndex]== 8)) throw new Exception("Invalid JPEG: Precision must be 8");
 
-        _header.height = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(_data, currentIndex+1));
-        _header.width = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(_data, currentIndex+3));
-        _header.componentCount = _data[currentIndex+5];
+        _header._height = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(_data, currentIndex+1));
+        _header._width = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(_data, currentIndex+3));
+        _header._componentCount = _data[currentIndex+5];
 
-        if(!_supportedComponentCount.Contains(_header.componentCount)) throw new Exception("Unsupported amount of colour channels");
+        if(!_supportedComponentCount.Contains(_header._componentCount)) throw new Exception("Unsupported amount of colour channels");
 
         currentIndex+=6;
 
         // Initialise color component objects
-        for(int i = 0; i<_header.componentCount; i++)
+        for(int i = 0; i<_header._componentCount; i++)
         {
             int componentID = _data[currentIndex];
             // Color components can sometimes be zero based, but i won't allow that
@@ -189,8 +192,8 @@ public class JpegReader
             if(horizontalSamplingFactor != 1 || verticalSamplingFactor!=1) throw new Exception("Unsupported sampling factor, must be 1");
             currentIndex+=1;
             byte quantizationTableID = _data[currentIndex];
-            _header.colorComponents[i] = new(i+1,quantizationTableID);
-            if(sofDataLength - 5 - (3*_header.componentCount)!=0) throw new Exception("SOF Section length did not match with actual section length");
+            _header._colorComponents[i] = new(i+1,quantizationTableID);
+            if(sofDataLength - 5 - (3*_header._componentCount)!=0) throw new Exception("SOF Section length did not match with actual section length");
             currentIndex+=1;
         }
 
