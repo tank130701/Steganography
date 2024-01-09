@@ -1,4 +1,5 @@
 ﻿using System.Buffers.Binary;
+using System.Net.Sockets;
 using static Steganography.Service.Utils.JPEG.JPEGHelper;
 
 namespace Steganography.Service.Utils.JPEG;
@@ -39,6 +40,40 @@ public class JpegReader
         if(TryPeekMarker(index)==false) return null;
         // Possible failure point
         return (JpegMarker)_data[index+1];
+    }
+    
+    public void ReadStartOfScan()
+    {
+        var SOS = FindJPEGMarker(JpegMarker.StartOfScan);
+        if(SOS.Item1 == null) throw new Exception("Invalid JPEG: Start of scan marker not found");
+        int scanSectionLength = GetSectionLength((int)SOS.Item1);
+        int currentIndex = (int)SOS.Item1+4;
+        // Post ++ to avoid currentIndex+=1 after.
+        int numberOfComponents = _data[currentIndex++];
+
+        // TODO use this, maybe make a hash map or something
+        // Relation between colour components and Huffman table IDs used for each component with 
+        // The ID you read
+        for(int i = 0; i<numberOfComponents; i++)
+        {
+            int componentID = _data[currentIndex++];
+            var (tableType, tableID) = _data[currentIndex++].SplitIntoNibbles();
+        }
+        int startOfSelection = _data[currentIndex++];
+        int endOfSelection = _data[currentIndex++];
+
+        if(endOfSelection-startOfSelection!=63) throw new Exception($"Unsupported MCU size - 8x8 block expected, got selection with starting index {startOfSelection}; ending index {endOfSelection}");
+
+        // Not used in baseline JPEG but might as well store for later
+        // Is actually split into nibbles but idc as long as its 0
+        int successiveApproximation = _data[currentIndex++];
+        if(successiveApproximation != 0) throw new Exception("Successive approximation byte is not equal to 0");
+
+        // TODO Ideally write out read data for troubleshooting purposes
+        if(currentIndex-scanSectionLength != (int)SOS.Item1+4) throw new Exception("Start of scan length mismatch");
+
+        // Finished reading Start of Scan section, begin reading huffman coded bitstream located past this
+
     }
 
     /// <summary>
