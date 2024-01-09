@@ -103,6 +103,7 @@ namespace Steganography.ConsoleUI
             AlgorithmChanged += encodeInfo.IsAlgorithmChanged;
             AlgorithmChanged += decodeInfo.IsAlgorithmChanged;
             MessageChanged += encodeInfo.IsMessageChanged;
+            MessageChanged += decodeInfo.IsMessageChanged;
             FileChanged += encodeInfo.IsFileChanged;
             FileChanged += decodeInfo.IsFileChanged;
             DirectoryListUpdated += encodeFileMenu.DirectoryListUpdated;
@@ -216,7 +217,7 @@ namespace Steganography.ConsoleUI
                             {
                                 var message = decoder.DecodeMessage(_selectedFilePath, _selectedAlgorithm);
                                 _messageToEncode = message;
-                                MessageChanged?.Invoke(_messageToEncode);
+                                MessageChanged?.Invoke(message);
                                 Console.WriteLine($"Decoded Message: {message}");
                                 Console.WriteLine("Press any key to continue...");
                                 Console.ReadKey();
