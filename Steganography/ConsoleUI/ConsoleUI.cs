@@ -83,9 +83,7 @@ namespace Steganography.ConsoleUI
                     EncodeAlgorithmsButtons.Lsb,
                     EncodeAlgorithmsButtons.AlphaChannel,
                     EncodeAlgorithmsButtons.Metadata,
-                    EncodeAlgorithmsButtons.Palette,
                     EncodeAlgorithmsButtons.Dct,
-                    EncodeAlgorithmsButtons.F5,
                     EncodeAlgorithmsButtons.Eof,
                     EncodeAlgorithmsButtons.BackToMenu
                 },algorithmsMenuInfo);
@@ -257,17 +255,11 @@ namespace Steganography.ConsoleUI
                         case EncodeAlgorithmsButtons.AlphaChannel: 
                             currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.AlphaChannel);
                             break;
-                        case EncodeAlgorithmsButtons.Palette:
-                            currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.Palette);
-                            break;
                         case EncodeAlgorithmsButtons.Metadata: 
                             currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.Metadata);
                             break;
                         case EncodeAlgorithmsButtons.Dct:
                             currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.Dct);
-                            break;
-                        case EncodeAlgorithmsButtons.F5:
-                            currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.F5);
                             break;
                         case EncodeAlgorithmsButtons.Eof:
                             currentMenuStates = ChangeEncodeAlgorithm(EncodeAlgorithms.Eof);
@@ -286,17 +278,11 @@ namespace Steganography.ConsoleUI
                         case EncodeAlgorithmsButtons.AlphaChannel: 
                             currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.AlphaChannel);
                             break;
-                        case EncodeAlgorithmsButtons.Palette:
-                            currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.Palette);
-                            break;
                         case EncodeAlgorithmsButtons.Metadata: 
                             currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.Metadata);
                             break;
                         case EncodeAlgorithmsButtons.Dct:
                             currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.Dct);
-                            break;
-                        case EncodeAlgorithmsButtons.F5:
-                            currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.F5);
                             break;
                         case EncodeAlgorithmsButtons.Eof:
                             currentMenuStates = ChangeDecodeAlgorithm(EncodeAlgorithms.Eof);
