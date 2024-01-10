@@ -1,8 +1,6 @@
-﻿using System.Buffers;
-
-namespace Steganography.Service.Utils.JPEG;
+﻿namespace Steganography.Service.Utils.JPEG;
 
 public class JpegBitReader
 {
-    private ReadOnlySequence<byte> _data;
+    
 }
