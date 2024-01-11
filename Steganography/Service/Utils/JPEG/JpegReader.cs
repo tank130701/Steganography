@@ -100,6 +100,12 @@ public class JpegReader
 
     }
 
+    /// <summary>
+    /// Removes JPEG restart markers from passed huffman coded data and accounts for byte stuffing
+    /// </summary>
+    /// <param name="huffmanCodedData"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public List<byte>RemoveMarkersFromHuffmanCodedData(List<byte>huffmanCodedData)
     {
         byte previous = huffmanCodedData[0];
@@ -115,32 +121,37 @@ public class JpegReader
                 previous = current;
                 byteWasStuffed = false;
             }
-            switch(previous)
+
+            if(previous == (byte)JpegMarker.Padding)
             {
-                // Potential marker
-                case 0xFF:
-                    switch(current)
+                // TODO Sit down and think through the logic once again if things go wrong.
+                switch(current)
                     {
                         case (byte)JpegMarker.EndOfImage:
                             reachedEOF = true;
-                            break;
+                            continue;
                         case 0x00:
                             outputList.Add(previous);
                             byteWasStuffed = true;
-                            break;
+                            continue;
                         case >=(byte)JpegMarker.DefineRestart0 and <= (byte)JpegMarker.DefineRestart7:
-                            break;
+                            previous = current;
+                            continue;
+                        // Allow for multiple padding bytes in a row
+                        case (byte) JpegMarker.Padding:
+                            continue;
                         default:
-                            // TODO Sit down and think through the logic once again.
-                            break;
+                            throw new Exception($"Unexpected marker encountered in the huffman coded stream: {current}");
                     }
-                    break;  
             }
-            
-            previous = current;
-        }
 
-        return null;
+            previous = current;
+            // Do not add a padding byte in the decode list
+            if(current == (byte)JpegMarker.Padding) continue;
+
+            outputList.Add(current);
+        }
+        return outputList;
     }
 
     /// <summary>
