@@ -42,7 +42,12 @@ public class JpegReader
         return (JpegMarker)_data[index+1];
     }
     
-    public void ReadStartOfScan()
+    /// <summary>
+    /// Tries reading the start of scan section and returns a byte array of the huffman coded stream
+    /// </summary>
+    /// <returns> Byte[] containing the huffman coded data</returns>
+    /// <exception cref="Exception"></exception>
+    public List<byte> ReadStartOfScan()
     {
         var SOS = FindJPEGMarker(JpegMarker.StartOfScan);
         if(SOS.Item1 == null) throw new Exception("Invalid JPEG: Start of scan marker not found");
@@ -77,6 +82,27 @@ public class JpegReader
 
         // Finished reading Start of Scan section, begin reading huffman coded bitstream located past this
 
+       
+
+        byte[] huffmanCodedDataArray = new byte[_data.Length-currentIndex];
+
+        Array.Copy(_data,currentIndex,huffmanCodedDataArray,0, _data.Length-currentIndex);
+
+        List<byte> huffmanCodedData = new(huffmanCodedDataArray);
+
+        // TODO note if things go wrong.
+        // Now that i think of it, i should just read here and remove markers by appending
+        // to the list if a marker is encountered so i don't read the data a total of 3 times
+        huffmanCodedDataArray = null;
+        GC.Collect();
+
+        return huffmanCodedData;
+
+    }
+
+    public List<byte>RemoveMarkersFromHuffmanCodedData(List<byte>huffmanCodedData)
+    {
+        return null;
     }
 
     /// <summary>

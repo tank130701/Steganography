@@ -2,11 +2,11 @@
 
 public class BitStream
 {
-    private Stream wrapped;
+    private MemoryStream wrapped;
     private int bitPos = -1;
     private int buffer;
 
-    public BitStream(Stream stream) => this.wrapped = stream;
+    public BitStream(MemoryStream stream) => this.wrapped = stream;
 
     public IEnumerable<bool> ReadBits()
     {
