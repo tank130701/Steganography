@@ -102,6 +102,44 @@ public class JpegReader
 
     public List<byte>RemoveMarkersFromHuffmanCodedData(List<byte>huffmanCodedData)
     {
+        byte previous = huffmanCodedData[0];
+        List<byte> outputList = [];
+        bool reachedEOF = false;
+        bool byteWasStuffed = false;
+
+        foreach (var current in huffmanCodedData)
+        {
+            if(reachedEOF) break;
+            if(byteWasStuffed)
+            {
+                previous = current;
+                byteWasStuffed = false;
+            }
+            switch(previous)
+            {
+                // Potential marker
+                case 0xFF:
+                    switch(current)
+                    {
+                        case (byte)JpegMarker.EndOfImage:
+                            reachedEOF = true;
+                            break;
+                        case 0x00:
+                            outputList.Add(previous);
+                            byteWasStuffed = true;
+                            break;
+                        case >=(byte)JpegMarker.DefineRestart0 and <= (byte)JpegMarker.DefineRestart7:
+                            break;
+                        default:
+                            // TODO Sit down and think through the logic once again.
+                            break;
+                    }
+                    break;  
+            }
+            
+            previous = current;
+        }
+
         return null;
     }
 
