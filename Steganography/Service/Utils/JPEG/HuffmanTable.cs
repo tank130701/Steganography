@@ -13,8 +13,9 @@ public class HuffmanTable
     public byte[] _symbols = new byte[162];
     uint[] _codes = new uint[162];
     bool _set = false;
+    public bool Set{get;}
 
-    void GenerateCodeList()
+    public void GenerateCodeList()
     {
         uint code = 0;
         for (uint i = 0; i<16; i++)

@@ -154,6 +154,41 @@ public class JpegReader
         return outputList;
     }
 
+    public MCU[] DecodeHuffmanData(List<byte> huffmanData)
+    {
+        int mcuHeight = (_header._height+7)/ 8;
+        int mcuWidth = (_header._width+7) / 8;
+
+        var mcuArray = new MCU[mcuHeight*mcuWidth];
+
+        for(int i = 0; i<4; i++)
+        {
+            if(_header._huffmanACTables[i].Set) _header._huffmanACTables[i].GenerateCodeList();
+            if(_header._huffmanDCTables[i].Set) _header._huffmanDCTables[i].GenerateCodeList();
+        }
+
+        JpegBitReader bitReader = new(huffmanData.ToArray(), _header);
+
+        for(uint i = 0; i<mcuHeight*mcuWidth; i++)
+        {
+            for (int j = 0; j<_header._componentCount;j++)
+            {
+                // TODO this is headache inducing
+                if(!decodeMCUComponent(bitReader, mcuArray[i][j]))
+                {
+
+                }
+            }
+        }
+
+        return mcuArray;
+    }
+    // TODO im not 100% sure wtf im passing here
+    private bool decodeMCUComponent(JpegBitReader reader, int[]mcuComponent)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// Tries to read huffman tables and populate related JPEG header fields
     /// TODO METHOD TO DISPLAY TABLES FOR TESTING
