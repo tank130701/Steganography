@@ -1,5 +1,6 @@
 ﻿using System.Buffers.Binary;
 using System.Net.Sockets;
+using System.Text;
 using static Steganography.Service.Utils.JPEG.JPEGHelper;
 
 namespace Steganography.Service.Utils.JPEG;
@@ -82,7 +83,6 @@ public class JpegReader(byte[] data, JPEGHeader header)
 
         // Finished reading Start of Scan section, begin reading huffman coded bitstream located past this
 
-       
 
         byte[] huffmanCodedDataArray = new byte[_data.Length-currentIndex];
 
@@ -195,6 +195,30 @@ public class JpegReader(byte[] data, JPEGHeader header)
         }
 
         return mcuArray;
+    }
+
+    public byte[] EncodeHuffmanData(MCU[] mcuArray, int lengthInBytes, byte[] image)
+    {
+        int i = 0;
+        byte[] messageBytes = new byte[lengthInBytes];
+        while(true)
+        {
+            foreach (var mcu in mcuArray)
+            {
+                for(int j = 0; i<3;j++)
+                {
+                    if(!(i<lengthInBytes)) break;
+                    messageBytes[i] = (byte)mcu[j][62];
+                    i++;
+                }
+                if(!(i<lengthInBytes)) break;
+            }
+            break;
+        }
+        
+        string message = Encoding.ASCII.GetString(messageBytes);
+
+        return Algorithms.EOF.EOFWriter.WritePastEOFMarker(image,message);
     }
 
     /// <summary>

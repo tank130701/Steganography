@@ -66,7 +66,7 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
             case EncodeAlgorithms.Dct:
                 if(!(extension=="jpeg" || extension == "jpg")) throw new Exception($"Unsupported image extension:{extension}");
                 _image = repository.LoadImageToBytes("encode",imagePath);
-                _encodedImage = DCTWriter.WriteStegoMessage(_image);
+                _encodedImage = DCTWriter.WriteStegoMessage(_image, message);
                 // placeholder
                 return repository.SaveImageFromBytes(_encodedImage, extension);
             default:

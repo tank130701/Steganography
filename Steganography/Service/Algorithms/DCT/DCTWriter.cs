@@ -1,12 +1,15 @@
 ﻿
+using System.Text;
 using Steganography.Service.Utils.JPEG;
 
 namespace Steganography.Service.Algorithms;
 
 public static class DCTWriter
 {
-    public static byte[] WriteStegoMessage(byte[] image)
+    public static byte[] WriteStegoMessage(byte[] image, string message)
     {
+        byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+        int messageIndex = 0;
         JPEGHeader header = new();
         JpegReader reader = new(image, header);
         List<JPEGHelper.JpegMarker> supportedFrameTypes= [JPEGHelper.JpegMarker.StartOfFrame0];
@@ -19,12 +22,16 @@ public static class DCTWriter
         huffmanStream = null;
         GC.Collect();
         var mcuArray = reader.DecodeHuffmanData(huffmanStreamNoMarkers);
-
         foreach (var mcu in mcuArray)
         {
-            System.Console.WriteLine(mcu.ToString());
+            if(messageIndex>=messageBytes.Length) break;
+            for(int i = 0; i<3; i++)
+            {
+                mcu[i][62] = messageBytes[messageIndex];
+                messageIndex++;
+            }
         }
 
-        return image;
+        return reader.EncodeHuffmanData(mcuArray,messageBytes.Length, image);
     }
 }
