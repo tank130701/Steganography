@@ -176,7 +176,7 @@ public class JpegReader
             // TODO Read and set data
             
             int symbolCount = 0;
-            table._offsets[0] = symbolCount;
+            table._offsets[0] = (uint)symbolCount;
             
             // Populate offsets array. Offset array is used to calculate the amount of huffman codes of given length
             // Where index of offset array is the huffman code length, and the value at that index
@@ -187,7 +187,7 @@ public class JpegReader
             for(int i = 1; i<=16; i++)
             {
                 symbolCount += _data[currentIndex+i];
-                table._offsets[i] = symbolCount;
+                table._offsets[i] = (uint)symbolCount;
                 currentIndex++;
             }
 

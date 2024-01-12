@@ -9,9 +9,23 @@ public class HuffmanTable
     }
     byte _tableID;
     public byte TableID{get;}
-    public int[] _offsets = new int[17];
+    public uint[] _offsets = new uint[17];
     public byte[] _symbols = new byte[162];
-    //uint[] codes = [0];
+    uint[] _codes = new uint[162];
     bool _set = false;
+
+    void GenerateCodeList()
+    {
+        uint code = 0;
+        for (uint i = 0; i<16; i++)
+        {
+            for (uint j = _offsets[i]; j<_offsets[i+1]; j++)
+            {
+                _codes[j] = code;
+                code++;
+            }
+            code <<= 1;
+        }
+    }
 
 }
