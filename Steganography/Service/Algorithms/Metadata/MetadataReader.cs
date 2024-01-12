@@ -1,39 +1,36 @@
 ﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Metadata.Profiles.Exif;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats.Jpeg;
+using System;
+using System.Text;
+
 namespace Steganography.Service.Algorithms.Metadata;
 
-public static class MetadataReader
+internal static class MetadataReader
 {
-    public static string ReadMessageFromImage(Image<Rgba32> image)
+    internal static string ReadMessageFromImage(Image<Rgba32> image)
     {
+        // Получаем ExifProfile изображения
+        ExifProfile profile = image.Metadata.ExifProfile;
+        if (profile == null)
         {
-            // Чтение сообщения из метаданных изображения
-            byte[] messageBytes = new byte[image.Width * image.Height * 3 / 8];
-            int messageIndex = 0;
-            for (int y = 0; y < image.Height; y++)
-            {
-                for (int x = 0; x < image.Width; x++)
-                {
-                    Rgba32 pixel = image[x, y];
-
-                    // Чтение младших битов компонент цвета пикселя в байты сообщения
-                    if (messageIndex < messageBytes.Length)
-                    {
-                        byte messageByte = 0;
-                        messageByte |= (byte)((pixel.R & 0x01) << 7);
-                        messageByte |= (byte)((pixel.G & 0x01) << 6);
-                        messageByte |= (byte)((pixel.B & 0x01) << 5);
-                        messageBytes[messageIndex] = messageByte;
-                        messageIndex++;
-                    }
-                }
-            }
-
-            // Преобразование байтов сообщения в строку
-            string message = System.Text.Encoding.UTF8.GetString(messageBytes);
-            return message;
+            throw new InvalidOperationException("No Exif profile found in image.");
         }
+
+        // Пытаемся получить пользовательский комментарий
+        if (!profile.TryGetValue(ExifTag.UserComment, out var value))
+        {
+            throw new InvalidOperationException("No user comment found in Exif profile.");
+        }
+
+        // Предполагаем, что комментарий - это первое значение
+        var userComment = value.GetValue();
+        if (userComment == null)
+        {
+            throw new InvalidOperationException("User comment is null.");
+        }
+
+        // Конвертируем комментарий в строку
+        return userComment.ToString();
     }
 }

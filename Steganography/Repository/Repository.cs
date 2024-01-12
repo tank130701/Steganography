@@ -40,13 +40,14 @@ namespace Steganography.Repository
             return Image.Load<Rgba32>(imagePath);
         }
 
-        public void SaveImageFromRGB(Image<Rgba32> image)
+        public string SaveImageFromRGB(Image<Rgba32> image, string imageType)
         {
             Guid guid = Guid.NewGuid();
             var uuid = guid.ToString();
-            var newImage = $"{uuid}.jpg";
+            var newImage = $"{uuid}.{imageType}";
             var newImagePath = TextEncodedImagesDirectory + newImage;
-            image.Save(newImagePath, new JpegEncoder());
+            image.Save(newImagePath);
+            return newImage;
         }
 
         public byte[] LoadImageToBytes(string imageFolder, string imageName)
@@ -69,7 +70,7 @@ namespace Steganography.Repository
             return fileBytes;
         }
 
-        public string SaveImageFromBytes(byte[] image)
+        public string SaveImageFromBytes(byte[] image, string imageType)
         {
                 if (image == null || image.Length == 0)
                 {
@@ -78,7 +79,7 @@ namespace Steganography.Repository
                 
                 Guid guid = Guid.NewGuid();
                 var uuid = guid.ToString();
-                var newImage = $"{uuid}.jpg";
+                var newImage = $"{uuid}.{imageType}";
                 var newImagePath = TextEncodedImagesDirectory + newImage;
                 
                 using (FileStream fs = new FileStream(newImagePath, FileMode.Create, FileAccess.Write))
@@ -89,7 +90,7 @@ namespace Steganography.Repository
                     }
                 }
 
-                return newImagePath;
+                return newImage;
         }
         
 

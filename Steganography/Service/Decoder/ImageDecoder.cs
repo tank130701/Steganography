@@ -4,6 +4,7 @@ using Steganography.Service.Algorithms.AlphaChannel;
 using Steganography.Service.Algorithms.EOF;
 using Steganography.Service.Algorithms.LSB;
 using Steganography.Service.Algorithms.Metadata;
+using Steganography.Service.Algorithms.Palette;
 
 namespace Steganography.Service.Decoder
 {
@@ -35,13 +36,18 @@ namespace Steganography.Service.Decoder
                     if (decodedMessgae != "") return decodedMessgae;
                     return "Image does not have a message";
                 case EncodeAlgorithms.Lsb:
-                    image = repository.LoadImageToBytes("decode", imagePath);
-                    decodedMessgae = LsbReader.ReadMessage(image);
+                    rgbImage = repository.LoadImageToRGB("decode", imagePath);
+                    decodedMessgae = LsbReader.ReadMessage(rgbImage);
                     if (decodedMessgae != "") return decodedMessgae;
                     return "Image does not have a message";
                 case EncodeAlgorithms.AlphaChannel:
-                    image = repository.LoadImageToBytes("decode", imagePath);
-                    decodedMessgae = AlphaChannelReader.ReadMessage(image);
+                    rgbImage = repository.LoadImageToRGB("decode", imagePath);
+                    decodedMessgae = AlphaChannelReader.ReadMessage(rgbImage);
+                    if (decodedMessgae != "") return decodedMessgae;
+                    return "Image does not have a message";
+                case EncodeAlgorithms.Palette:
+                    rgbImage = repository.LoadImageToRGB("decode", imagePath);
+                    decodedMessgae = PaletteReader.ReadMessage(rgbImage);
                     if (decodedMessgae != "") return decodedMessgae;
                     return "Image does not have a message";
                 default:

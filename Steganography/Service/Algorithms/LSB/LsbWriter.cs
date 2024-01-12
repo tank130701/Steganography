@@ -3,61 +3,39 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 namespace Steganography.Service.Algorithms.LSB;
 
-public static class LsbWriter
+internal static class LsbWriter
 {
-    public static byte[] WriteMessage(byte[] byteArray, string message)
+    internal static Image<Rgba32> WriteMessage(Image<Rgba32> image, string message)
     {
-        using (MemoryStream stream = new MemoryStream(byteArray))
-        using (Image<Rgba32> image = Image.Load<Rgba32>(stream))
+        byte[] messageBytes = Encoding.UTF8.GetBytes(message); 
+        byte[] lengthBytes = BitConverter.GetBytes(messageBytes.Length);
+        int bitCount = 0;
+
+        for (int i = 0; i < 32; i++)
         {
-            byte[] messageBytes = Encoding.UTF8.GetBytes(message); // Используем UTF-8 для поддержки русских символов
+            Rgba32 pixel = image[0, i];
+            pixel.R = (byte)((pixel.R & ~1) | ((lengthBytes[i / 8] >> (7 - (i % 8))) & 1));
+            image[0, i] = pixel;
+        }
 
-            int bitCount = 0;
-            int messageLength = messageBytes.Length * 8;
-
-            for (int y = 0; y < image.Height; y++)
+        for (int y = 0; y < image.Height; y++)
+        {
+            for (int x = (y == 0 ? 32 : 0); x < image.Width; x++)
             {
-                for (int x = 0; x < image.Width; x++)
-                {
-                    if (bitCount >= messageLength)
-                    {
-                        break;
-                    }
-
-                    Rgba32 pixel = image[x, y];
-
-                    // Clear the least significant bit of each color channel
-                    pixel.R &= 0xFE;
-                    pixel.G &= 0xFE;
-                    pixel.B &= 0xFE;
-
-                    // Write the message bit to the least significant bit of each color channel
-                    pixel.R |= (byte)((messageBytes[bitCount >> 3] >> (7 - (bitCount % 8))) & 1);
-                    pixel.G |= (byte)((messageBytes[bitCount >> 3] >> (7 - (bitCount % 8)) & 1) << 1);
-                    pixel.B |= (byte)((messageBytes[bitCount >> 3] >> (7 - (bitCount % 8)) & 1) << 2);
-
-                    image[x, y] = pixel;
-
-                    bitCount++;
-
-                    // Break if the entire message is written
-                    if (bitCount >= messageLength)
-                    {
-                        break;
-                    }
-                }
-                if (bitCount >= messageLength)
+                if (bitCount >= messageBytes.Length * 8)
                 {
                     break;
                 }
-            }
 
-            using (MemoryStream outputStream = new MemoryStream())
-            {
-                image.SaveAsPng(outputStream);
-                return outputStream.ToArray();
+                Rgba32 pixel = image[x, y];
+
+                pixel.R = (byte)((pixel.R & ~1) | ((messageBytes[bitCount / 8] >> (7 - (bitCount % 8))) & 1));
+                image[x, y] = pixel;
+
+                bitCount++;
             }
         }
+        return image;
     }
 }
     

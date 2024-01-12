@@ -1,26 +1,18 @@
 ﻿namespace Steganography.ConsoleUI;
 
-public class FilesMenu
+public class FilesMenu(string title, List<string> files)
 {
-    public FilesMenu(string title, List<string> files)
-    {
-        Title = title;
-        Files = files;
-        Buttons.Add(EncodeAlgorithmsButtons.BackToMenu);
-    }
-
-    string Title { get; }
+    string Title { get; } = title;
     int SelectedIndex { get; set; } = 0;
-    private List<string> Files { get; set; }
-    List<string> Buttons { get; } = new();
-    
+    private List<string> Files { get; set; } = new ();
+
     void DisplayOptions()
         {
             Console.WriteLine(Title);
 
-            for (int i = 0; i < Buttons.Count; i++)
+            for (int i = 0; i < Files.Count; i++)
             {
-                string currentOption = Buttons[i];
+                string currentOption = Files[i];
                 string prefix;
 
                 if(i == SelectedIndex)
@@ -44,13 +36,6 @@ public class FilesMenu
         public string DisplayMenu()
         {
             ConsoleKey keyPressed;
-            foreach (var item in Files)
-            {
-                if (!Buttons.Contains(item))
-                {
-                    Buttons.Add(item);
-                }
-            }
             do
             {
                 Console.Clear();
@@ -62,7 +47,7 @@ public class FilesMenu
                 if(keyPressed == ConsoleKey.DownArrow)
                 {
                     SelectedIndex++;
-                    if(SelectedIndex >= Buttons.Count)
+                    if(SelectedIndex >= Files.Count)
                     {
                         SelectedIndex = 0;
                     }
@@ -71,16 +56,18 @@ public class FilesMenu
                     SelectedIndex--;
                     if(SelectedIndex < 0)
                     {
-                        SelectedIndex = Buttons.Count-1;
+                        SelectedIndex = Files.Count-1;
                     }
                 }
             } while(keyPressed!=ConsoleKey.Enter);
 
-            return Buttons[SelectedIndex];
+            return Files[SelectedIndex];
         }
         
         public void DirectoryListUpdated(List<string> files)
         {
             Files = files;
+            if (!Files.Contains(EncodeAlgorithmsButtons.BackToMenu))
+                Files.Add(EncodeAlgorithmsButtons.BackToMenu);
         }
 }

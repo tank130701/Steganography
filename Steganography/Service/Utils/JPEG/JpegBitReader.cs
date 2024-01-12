@@ -1,8 +1,17 @@
-﻿using System.Buffers;
-
-namespace Steganography.Service.Utils.JPEG;
+﻿namespace Steganography.Service.Utils.JPEG;
 
 public class JpegBitReader
 {
-    private ReadOnlySequence<byte> _data;
+    BitStream _bitStream;
+    JPEGHeader _header;
+
+    public JpegBitReader(byte[] huffmanDataArray, JPEGHeader header)
+    {
+        MemoryStream memoryStream = new(huffmanDataArray);
+        _bitStream = new(memoryStream);
+        _header = header;
+    }
+
+    
+
 }
