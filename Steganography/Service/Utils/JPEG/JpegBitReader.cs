@@ -55,6 +55,6 @@ public class JpegBitReader
     // TODO implement
     internal void Align()
     {
-        throw new NotImplementedException();
+        _bitStream.Align();
     }
 }
