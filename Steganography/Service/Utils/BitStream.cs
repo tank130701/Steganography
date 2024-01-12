@@ -8,7 +8,20 @@ public class BitStream
 
     public BitStream(MemoryStream stream) => this.wrapped = stream;
 
-    public IEnumerable<bool> ReadBits()
+    public IEnumerable<int> ReadBits()
+    {
+        do
+        {
+            while (bitPos >= 0)
+            {
+                yield return (buffer & (1 << bitPos--)) > 0 ? 1 : 0;
+            }
+            buffer = wrapped.ReadByte();
+            bitPos = 7;  
+        } while (buffer > -1);
+    }
+
+    public IEnumerable<bool> ReadBitsAsBool()
     {
         do
         {

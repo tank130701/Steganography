@@ -8,7 +8,9 @@ public class ColorComponent
     int _colorComponentID;
     public int ColorComponentID{get;}
     HuffmanTable _huffmanDCTable;
+    public HuffmanTable HuffmanDCTable{get;}
     HuffmanTable _huffmanACTable;
+    public HuffmanTable HuffmanACTable{get;}
     bool used = false;
     
     public ColorComponent(){}

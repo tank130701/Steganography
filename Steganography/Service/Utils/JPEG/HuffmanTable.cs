@@ -11,7 +11,7 @@ public class HuffmanTable
     public byte TableID{get;}
     public uint[] _offsets = new uint[17];
     public byte[] _symbols = new byte[162];
-    uint[] _codes = new uint[162];
+    public uint[] _codes = new uint[162];
     bool _set = false;
     public bool Set{get;}
 

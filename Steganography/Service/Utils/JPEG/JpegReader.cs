@@ -154,6 +154,12 @@ public class JpegReader
         return outputList;
     }
 
+    /// <summary>
+    /// Decodes huffman data stream
+    /// </summary>
+    /// <param name="huffmanData"></param>
+    /// <returns> Quantized MCU array </returns>
+    /// <exception cref="Exception"></exception>
     public MCU[] DecodeHuffmanData(List<byte> huffmanData)
     {
         int mcuHeight = (_header._height+7)/ 8;
@@ -169,24 +175,97 @@ public class JpegReader
 
         JpegBitReader bitReader = new(huffmanData.ToArray(), _header);
 
+        int[] previousDCCoefficients = [0,0,0];
+
         for(uint i = 0; i<mcuHeight*mcuWidth; i++)
         {
+            if(_header._restartInterval!=0 && i%_header._restartInterval == 0)
+            {
+                previousDCCoefficients = [0,0,0];
+                bitReader.Align();
+            }
             for (int j = 0; j<_header._componentCount;j++)
             {
                 // TODO this is headache inducing
-                if(!decodeMCUComponent(bitReader, mcuArray[i][j]))
+                if(!decodeMCUComponent(bitReader, mcuArray[i][j], ref previousDCCoefficients[j], _header._colorComponents[j].HuffmanDCTable, _header._colorComponents[i].HuffmanACTable))
                 {
-
+                    throw new Exception("Failed to decode MCU Component");
                 }
             }
         }
 
         return mcuArray;
     }
-    // TODO im not 100% sure wtf im passing here
-    private bool decodeMCUComponent(JpegBitReader reader, int[]mcuComponent)
+
+    /// <summary>
+    /// Decodes an mcu channel (component)
+    /// </summary>
+    /// <param name="reader"></param>
+    /// <param name="mcuComponent"></param>
+    /// <param name="DCTable"></param>
+    /// <param name="ACTable"></param>
+    /// <returns>True if successful</returns>
+    /// <exception cref="Exception"></exception>
+    private bool decodeMCUComponent(JpegBitReader reader, int[]mcuComponent, ref int previousDCCoefficient, HuffmanTable DCTable, HuffmanTable ACTable)
     {
-        throw new NotImplementedException();
+        // Decode DC Coefficient
+        byte DCCoefficientLength = reader.GetNextSymbol(DCTable);
+        // TODO ERror checking for inability to read symbol
+
+        if(DCCoefficientLength > 11) return false;
+
+        int coefficient = reader.ReadBits(DCCoefficientLength);
+        // TODO possible error if coeff is invalid
+
+        if(DCCoefficientLength!=0 && coefficient< (1<<(DCCoefficientLength-1) ))
+        {
+            coefficient -= (1<<DCCoefficientLength)-1;
+        }
+
+        mcuComponent[0] = coefficient+previousDCCoefficient;
+        previousDCCoefficient = mcuComponent[0];
+
+        // Start decoding AC Coefficients
+        for (int i = 1; i < 64; i++)
+        {
+            var symbol = reader.GetNextSymbol(ACTable);
+            // TODO Error checking
+
+            if(symbol == 0x00)
+            {
+                for(; i<64; i++)
+                {
+                    mcuComponent[zigZagMap[i]]=0;
+                }
+                return true;
+            }
+
+            var (zeroCount, coeffLength) = symbol.SplitIntoNibbles();
+            coefficient = 0;
+            if(symbol == 0xF0)zeroCount = 16;
+
+            if(i + zeroCount>=64) throw new Exception("Zero run length exceeds MCU size");
+
+            for(int j = 0; j<zeroCount; j++, i++)
+            {
+                mcuComponent[zigZagMap[i]]=0;
+            }
+
+            if(coeffLength>10)throw new Exception("AC Coefficient length greater than 10");
+
+            if(coeffLength!=0)
+            {
+                coefficient = reader.ReadBits(coeffLength);
+                //TODO error checking here if read bits fails
+                
+                if(coefficient<(1<<(coeffLength-1)))
+                {
+                    coefficient-=(1<<coeffLength)-1;
+                }
+                mcuComponent[zigZagMap[i]] = coefficient;
+            }
+        }
+        return true;
     }
 
     /// <summary>
