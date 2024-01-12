@@ -1,4 +1,6 @@
-﻿namespace Steganography.Service.Utils.JPEG;
+﻿using System.Text;
+
+namespace Steganography.Service.Utils.JPEG;
 
 public struct MCU
 {
@@ -76,6 +78,38 @@ public struct MCU
         }
     }
 
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        sb.AppendLine("Y");
+        for (int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j<8; j++)
+            {
+                sb.Append(_y[i*8+j]);
+            }
+            sb.AppendLine("");
+        }
+        sb.AppendLine("Cb");
+        for (int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j<8; j++)
+            {
+                sb.Append(_cb[i*8+j]);
+            }
+            sb.AppendLine("");
+        }
+        sb.AppendLine("Cr");
+        for (int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j<8; j++)
+            {
+                sb.Append(_cr[i*8+j]);
+            }
+            sb.AppendLine("");
+        }
+        return sb.ToString();
+    }
 
     public MCU(){}
 

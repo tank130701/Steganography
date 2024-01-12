@@ -4,10 +4,10 @@ using static Steganography.Service.Utils.JPEG.JPEGHelper;
 
 namespace Steganography.Service.Utils.JPEG;
 
-public class JpegReader
+public class JpegReader(byte[] data, JPEGHeader header)
 {
-    readonly byte[] _data;
-    JPEGHeader _header;
+    readonly byte[] _data = data;
+    JPEGHeader _header = header;
     List<int> _supportedComponentCount = [1,3];
     /// <summary>
     /// Checks if the first 2 bytes are a start of image marker
@@ -305,6 +305,7 @@ public class JpegReader
                 currentIndex++;
             }
 
+            // TODO fix
             if(symbolCount>162) throw new Exception($"Too many symbols in Huffman table with id {lowerNibble}");
 
             // Read actual huffman symbols and populate huffman table's symbol array
@@ -382,6 +383,7 @@ public class JpegReader
             currentIndex+=1;
             byte quantizationTableID = _data[currentIndex];
             _header._colorComponents[i] = new(i+1,quantizationTableID);
+            // TODO fix, always triggers
             if(sofDataLength - 5 - (3*_header._componentCount)!=0) throw new Exception("SOF Section length did not match with actual section length");
             currentIndex+=1;
         }

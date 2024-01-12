@@ -1,6 +1,6 @@
 ﻿namespace Steganography.Service.Utils.JPEG;
 
-public struct JPEGHeader
+public class JPEGHeader
 {
     public HuffmanTable[] _huffmanDCTables = new HuffmanTable[4];
     public HuffmanTable[] _huffmanACTables = new HuffmanTable[4];

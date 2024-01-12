@@ -44,6 +44,12 @@ namespace Steganography.Service.Decoder
                     decodedMessgae = AlphaChannelReader.ReadMessage(rgbImage);
                     if (decodedMessgae != "") return decodedMessgae;
                     return "Image does not have a message";
+                case EncodeAlgorithms.Dct:
+                    image = repository.LoadImageToBytes("decode", imagePath);
+                    decodedMessgae = DCTReader.ReadMessageFromImage(image);
+                    if(decodedMessgae != "") return decodedMessgae;
+                    return "Image does not have a message";
+
                 default:
                     throw new Exception("This Method is not Implemented.");
             }
