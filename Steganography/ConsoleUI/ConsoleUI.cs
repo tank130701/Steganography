@@ -192,6 +192,8 @@ namespace Steganography.ConsoleUI
                             catch (Exception e)
                             {
                                 Console.WriteLine(e.Message);
+                                System.Console.WriteLine(e.StackTrace);
+                                System.Console.WriteLine(e.TargetSite);
                                 Console.ReadKey();
                                 break;
                             }
@@ -226,6 +228,8 @@ namespace Steganography.ConsoleUI
                             catch (Exception e)
                             {
                                 Console.WriteLine(e.Message);
+                                System.Console.WriteLine(e.StackTrace);
+                                System.Console.WriteLine(e.TargetSite);
                                 Console.ReadKey();
                                 break;
                             }

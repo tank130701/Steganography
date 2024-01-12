@@ -1,5 +1,4 @@
-﻿
-using System.Text;
+﻿using System.Text;
 using Steganography.Service.Utils.JPEG;
 
 namespace Steganography.Service.Algorithms;
@@ -12,9 +11,9 @@ public static class DCTWriter
         int messageIndex = 0;
         JPEGHeader header = new();
         JpegReader reader = new(image, header);
-        List<JPEGHelper.JpegMarker> supportedFrameTypes= [JPEGHelper.JpegMarker.StartOfFrame0];
+        List<JPEGHelper.JpegMarker> supportedFrameTypes = [JPEGHelper.JpegMarker.StartOfFrame0];
         if(!reader.ContainsValidStartOfImage()) throw new Exception("File does not contain a valid SOI marker");
-        reader.ReadSOFData(supportedFrameTypes);
+        image = reader.ReadSOFData(supportedFrameTypes,messageBytes);
         reader.ReadHuffmanTables();
         reader.ReadRestartInterval();
         var huffmanStream = reader.ReadStartOfScan();
@@ -32,6 +31,6 @@ public static class DCTWriter
             }
         }
 
-        return reader.EncodeHuffmanData(mcuArray,messageBytes.Length, image);
+        return image;
     }
 }
