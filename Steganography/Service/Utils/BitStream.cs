@@ -18,7 +18,7 @@ public class BitStream
                 yield return (buffer & (1 << bitPos--)) > 0 ? 1 : 0;
             }
             buffer = wrapped.ReadByte();
-            bitPos = 7;  
+            bitPos = 7;
         } while (buffer > -1);
     }
 
@@ -35,8 +35,14 @@ public class BitStream
         } while (buffer > -1);
     }
 
+    /// <summary>
+    /// Skips over to the next byte if byte after current pos is equal to 0
+    /// </summary>
     internal void Align()
     {
-        throw new NotImplementedException();
+        if((buffer & (1<<--bitPos)) == 0)
+        {
+            bitPos = -1;
+        }
     }
 }
