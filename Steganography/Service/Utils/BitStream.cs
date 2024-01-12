@@ -1,4 +1,5 @@
-﻿namespace Steganography.Service.Utils;
+﻿
+namespace Steganography.Service.Utils;
 
 public class BitStream
 {
@@ -32,5 +33,10 @@ public class BitStream
             buffer = wrapped.ReadByte();
             bitPos = 7;  
         } while (buffer > -1);
+    }
+
+    internal void Align()
+    {
+        throw new NotImplementedException();
     }
 }
