@@ -1,6 +1,7 @@
 ﻿using Steganography.Repository;
 using Steganography.Service.Algorithms;
 using Steganography.Service.Algorithms.AlphaChannel;
+using Steganography.Service.Algorithms.DCT;
 
 namespace Steganography.Service.Encoder;
 
@@ -62,7 +63,13 @@ public class ImageEncoder(IRepository repository) : IImageEncoder
                 if (extension == "png") throw new Exception("Unsupported image format.");
                 rgbImage = repository.LoadImageToRGB("encode", imagePath);
                 _encodedImage = AlphaChannelWriter.WriteMessage(rgbImage, message);
-                return repository.SaveImageFromBytes(_encodedImage, extension);  
+                return repository.SaveImageFromBytes(_encodedImage, extension);
+            case EncodeAlgorithms.Dct:
+                if(!(extension=="jpeg" || extension == "jpg")) throw new Exception($"Unsupported image extension:{extension}");
+                _image = repository.LoadImageToBytes("encode",imagePath);
+                _encodedImage = DCTWriter.WriteStegoMessage(_image, message);
+                // placeholder
+                return repository.SaveImageFromBytes(_encodedImage, extension);
             default:
                 throw new Exception("This Method is not Implemented.");
         }

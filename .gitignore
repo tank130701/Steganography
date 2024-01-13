@@ -227,3 +227,5 @@ AppPackages/
 #####
 
 .mono/*
+*/ImagesForEncoding/*
+*/EncodedImages/*
