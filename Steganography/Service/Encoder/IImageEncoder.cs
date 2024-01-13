@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Steganography.Service
+﻿namespace Steganography.Service.Encoder
 {
-    internal interface IImageEncoder
+    public interface IImageEncoder
     {
-        void EncodeText(string imagePath, string outputImagePath, string text);
+        string EncodeMessage(string imagePath, string message, string algorithm);
+        public List<string> GetImageFilesInDirectory();
     }
 }

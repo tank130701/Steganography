@@ -1,34 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Steganography.ConsoleUI
+﻿namespace Steganography.ConsoleUI
 {
     internal static class MainMenuButtons
     {
-        public const string TextMainMenuEncodeMessage = "Закодировать сообщение";
-        public const string TextMainMenuDecodeMessage = "Декодировать сообщение";
-        public const string TextMainMenuExit = "Выход";
+        public const string EncodeMessage = "Encode message";
+        public const string DecodeMessage = "Decode message";
+        public const string Exit = "Exit";
     }
 
     internal static class EncodeMenuButtons
     {
-        public const string TextEncodeMenuSelectImage = "Выбрать изображение";
-        public const string TextEncodeMenuSelectAlogrithm = "Выбрать алгоритм";
-        public const string TextEncodeMenuWriteMessage = "Написать сообщение";
-        public const string TextEncodeMenuEncodeMessage = "Закодировать сообщение";
+        public const string SelectImage = "Select Image";
+        public const string SelectAlgorithm = "Select Algorithm";
+        public const string WriteMessage = "Write a message";
+        public const string EncodeMessage = "Encode message";
+        public const string BackToMainMenu = "Back to Main Menu";
 
     }
 
     internal static class DecodeMenuButtons
     {
-        public const string TextDecodeMenuSelectImage = "Выбрать изображение";
-        public const string TextDecodeMenuSelectAlogrithm = "Выбрать алгоритм";
-        public const string TextDecodeMenuDecodeMessage = "Декодировать сообщение";
+        public const string SelectImage = "Select Image";
+        public const string SelectAlgorithm = "Select Algorithm";
+        public const string DecodeMessage = "Decode message";
+        public const string BackToMainMenu = "Back to Main Menu";
 
     }
 
+    internal static class EncodeAlgorithmsButtons
+    {
+        public const string Lsb = "Least Significant Bit (LSB) (PNG only)";
+        public const string AlphaChannel = "Embedding into the alpha channel (Alhpa Channel) (JPEG only)";
+        public const string Metadata = "Embedding in metadata (Metadata)";
+        public const string Dct = "Encoding in DCT coefficients (DCT)";
+        public const string Eof = "EOF (JPEG only)";
+        public const string BackToMenu = "Back to Menu";
+    }
 
 }
