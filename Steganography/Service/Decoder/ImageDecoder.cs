@@ -22,9 +22,27 @@ namespace Steganography.Service.Decoder
                 throw new Exception("The file is not selected. Select a file.");
             }
             
+            string extension = Path.GetExtension(imagePath).ToLowerInvariant();
+
+            switch (extension)
+            {
+                case ".png":
+                    extension = "png";
+                    break;
+                case ".jpeg":
+                    extension = "jpeg";
+                    break;
+                case ".jpg":
+                    extension = "jpg";
+                    break;
+                default:
+                    throw new Exception("Unsupported image format.");
+            }
+            
             switch (algorithm)
             {
                 case EncodeAlgorithms.Eof:
+                    if (extension == "png") throw new Exception("Unsupported image format.");
                     var image = repository.LoadImageToBytes("decode", imagePath);
                     decodedMessgae = EOFReader.ReadPastEOFMarker(image);
                     if (decodedMessgae != "") return decodedMessgae;
@@ -35,11 +53,13 @@ namespace Steganography.Service.Decoder
                     if (decodedMessgae != "") return decodedMessgae;
                     return "Image does not have a message";
                 case EncodeAlgorithms.Lsb:
+                    if (extension != "png") throw new Exception("Unsupported image format.");
                     rgbImage = repository.LoadImageToRGB("decode", imagePath);
                     decodedMessgae = LsbReader.ReadMessage(rgbImage);
                     if (decodedMessgae != "") return decodedMessgae;
                     return "Image does not have a message";
                 case EncodeAlgorithms.AlphaChannel:
+                    if (extension == "png") throw new Exception("Unsupported image format.");
                     rgbImage = repository.LoadImageToRGB("decode", imagePath);
                     decodedMessgae = AlphaChannelReader.ReadMessage(rgbImage);
                     if (decodedMessgae != "") return decodedMessgae;
