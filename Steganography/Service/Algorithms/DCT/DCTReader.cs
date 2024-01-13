@@ -1,7 +1,6 @@
-﻿using System.Text;
-using Steganography.Service.Utils.JPEG;
+﻿using Steganography.Service.Utils.JPEG;
 
-namespace Steganography.Service.Algorithms;
+namespace Steganography.Service.Algorithms.DCT;
 
 public static class DCTReader
 {
@@ -11,7 +10,7 @@ public static class DCTReader
         List<byte> messageBytes = new List<byte>();
         JPEGHeader header = new();
         JpegReader reader = new(image, header);
-        List<JPEGHelper.JpegMarker> supportedFrameTypes = [JPEGHelper.JpegMarker.StartOfFrame0];
+        List<JPEGHelper.JpegMarker> supportedFrameTypes =  new [JPEGHelper.JpegMarker.StartOfFrame0];
         if(!reader.ContainsValidStartOfImage()) throw new Exception("File does not contain a valid SOI marker");
         reader.ReadSOFData(supportedFrameTypes);
         reader.ReadHuffmanTables();

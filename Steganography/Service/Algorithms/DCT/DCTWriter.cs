@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Steganography.Service.Utils.JPEG;
 
-namespace Steganography.Service.Algorithms;
+namespace Steganography.Service.Algorithms.DCT;
 
 public static class DCTWriter
 {

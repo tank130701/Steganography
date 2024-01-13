@@ -1,6 +1,7 @@
 using Steganography.Repository;
 using Steganography.Service.Algorithms;
 using Steganography.Service.Algorithms.AlphaChannel;
+using Steganography.Service.Algorithms.DCT;
 using Steganography.Service.Algorithms.EOF;
 using Steganography.Service.Algorithms.LSB;
 using Steganography.Service.Algorithms.Metadata;
